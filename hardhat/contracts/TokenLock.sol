@@ -45,8 +45,8 @@ contract TokenLock {
         // 实例化代币合约
         token = IERC20(_token);
 
-        // npx hardhat test测试时，需要减一天，因为unlock()中不满1天直接return了
-        // 正式部署请改为：startTimestamp = block.timestamp
+        // 需要减一天，部署完可以立马解锁一次
+        // 否则因为unlock()中不满1天直接return了
         startTimestamp = block.timestamp - 1 days;
 
         lastUnlockTimestamp = startTimestamp;
