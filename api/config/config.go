@@ -29,7 +29,7 @@ var Config = config{
 	// NFT铸造人私钥(去掉0x)，要改
 	NftFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// NFT合约地址，要改
-	NftContractAddress: "0xc5B7e9377f12a614E709c0d79B93e80140538Df0",
+	NftContractAddress: "0x246C53CB65366ef73076a08804b08afF169F58BD",
 
 	// -----------------------------------主网币转账配置---------------------------------
 	// 主网币发送人私钥(去掉0x)，要改

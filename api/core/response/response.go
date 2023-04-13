@@ -27,7 +27,7 @@ var (
 	Success = RespType{code: 1, msg: "成功"}
 	Failed  = RespType{code: 0, msg: "失败"}
 
-	KeyInvalid = RespType{code: 333, msg: "key参数无效"}
+	KeyInvalid = RespType{code: 333, msg: "ApiKey无效"}
 
 	Request404Error = RespType{code: 404, msg: "请求接口不存在"}
 	Request405Error = RespType{code: 405, msg: "请求方法不存在"}

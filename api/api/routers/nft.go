@@ -15,6 +15,7 @@ var NftGroup = core.Group("/nft")
 func init() {
 	group := NftGroup
 	group.AddPOST("/mintSeaDrop", mintSeaDrop)
+	group.AddPOST("/transferFrom", transferFrom)
 }
 
 // 铸造NFT
@@ -23,4 +24,12 @@ func mintSeaDrop(c *gin.Context) {
 	var mintReq req.NftMintSeaDropReq
 	util.VerifyUtil.VerifyBody(c, &mintReq)
 	response.OkWithData(c, nft.NftService.MintSeaDrop(mintReq.Minter, mintReq.Quantity))
+}
+
+// 授权转出NFT
+// 参数：from: 发送人, tokenId: NFT ID
+func transferFrom(c *gin.Context) {
+	var transferFromReq req.NftTransferFromReq
+	util.VerifyUtil.VerifyBody(c, &transferFromReq)
+	response.OkWithData(c, nft.NftService.TransferFrom(transferFromReq.From, transferFromReq.TokenId))
 }
