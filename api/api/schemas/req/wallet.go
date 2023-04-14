@@ -5,13 +5,13 @@ type WalletCreateReq struct {
 	Count uint `form:"count,default=1" binding:"min=1,max=100"` // 创建数量
 }
 
-//WalletPrivateKeyToAddressReq 私钥转钱包地址参数
-type WalletPrivateKeyToAddressReq struct {
+//WalletPrivateKeyUnlockReq 私钥解锁参数
+type WalletPrivateKeyUnlockReq struct {
 	PrivateKey string `form:"privateKey" binding:"required"` // 私钥
 }
 
-//WalletMnemonicToAddressAndPrivateKeyReq 助记词转钱包地址和私钥参数
-type WalletMnemonicToAddressAndPrivateKeyReq struct {
+//WalletMnemonicUnlockReq 助记词解锁参数
+type WalletMnemonicUnlockReq struct {
 	Mnemonic string `form:"mnemonic" binding:"required"` // 助记词
 }
 

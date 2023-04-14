@@ -31,7 +31,7 @@ func (wl walletLogic) CreateWallet() (address, privateKey, mnemonic string) {
 	// 生成助记词
 	mnemonic, _ = bip39.NewMnemonic(entropy)
 	// 通过助记词生成钱包地址、私钥
-	address, privateKey = wl.MnemonicToAddressAndPrivateKey(mnemonic)
+	address, privateKey = wl.MnemonicUnlock(mnemonic)
 	return
 }
 
@@ -59,8 +59,8 @@ func (wl walletLogic) BatchCreateWallet(Count uint) (data []resp.WalletCreateRes
 	return
 }
 
-// PrivateKeyToAddress 私钥解锁钱包（得到钱包地址）
-func (wl walletLogic) PrivateKeyToAddress(privKey string) (address string) {
+// PrivateKeyUnlock 私钥解锁钱包（得到钱包地址）
+func (wl walletLogic) PrivateKeyUnlock(privKey string) (address string) {
 	// 如果私钥以0x开头则去掉，否则原样返回
 	privKey = strings.TrimPrefix(privKey, "0x")
 	privateKey := CommonLogic.GetTruePrivateKey(privKey)
@@ -71,8 +71,8 @@ func (wl walletLogic) PrivateKeyToAddress(privKey string) (address string) {
 	return
 }
 
-// MnemonicToAddressAndPrivateKey 助记词解锁钱包（得到钱包地址+私钥）
-func (wl walletLogic) MnemonicToAddressAndPrivateKey(mnemonic string) (address string, privateKey string) {
+// MnemonicUnlock 助记词解锁钱包（得到钱包地址+私钥）
+func (wl walletLogic) MnemonicUnlock(mnemonic string) (address string, privateKey string) {
 	if ok := bip39.IsMnemonicValid(mnemonic); !ok {
 		util.CheckUtil.CheckApiErr(errors.New(""), "助记词无效")
 	}
@@ -92,7 +92,7 @@ func (wl walletLogic) MnemonicToAddressAndPrivateKey(mnemonic string) (address s
 // Transfer 主网币转账
 func (wl walletLogic) Transfer(to string, amount float64) (txHash string) {
 	// 发款方私钥解锁，获取钱包地址
-	fromAddress := WalletLogic.PrivateKeyToAddress(config.Config.PrivateKey)
+	fromAddress := wl.PrivateKeyUnlock(config.Config.PrivateKey)
 	// 校验钱包余额
 	CommonLogic.CheckBalance(fromAddress, amount)
 	// 校验收款方钱包格式
@@ -111,7 +111,7 @@ func (wl walletLogic) Transfer(to string, amount float64) (txHash string) {
 // UsdtTransfer USDT转账
 func (wl walletLogic) UsdtTransfer(to string, amount float64) (txHash string) {
 	// 发款方私钥解锁，获取钱包地址
-	fromAddress := WalletLogic.PrivateKeyToAddress(config.Config.UsdtFromPrivateKey)
+	fromAddress := wl.PrivateKeyUnlock(config.Config.UsdtFromPrivateKey)
 	// 校验发送人余额
 	CommonLogic.CheckUsdtBalance(fromAddress, amount)
 	// 校验收款方钱包格式
@@ -135,7 +135,7 @@ func (wl walletLogic) UsdtTransfer(to string, amount float64) (txHash string) {
 // TokenTransfer Token转账
 func (wl walletLogic) TokenTransfer(to string, amount float64) (txHash string) {
 	// 发款方私钥解锁，获取钱包地址
-	fromAddress := WalletLogic.PrivateKeyToAddress(config.Config.TokenFromPrivateKey)
+	fromAddress := wl.PrivateKeyUnlock(config.Config.TokenFromPrivateKey)
 	// 校验发送人余额
 	CommonLogic.CheckTokenBalance(fromAddress, amount)
 	// 校验收款方钱包格式
@@ -159,7 +159,7 @@ func (wl walletLogic) TokenTransfer(to string, amount float64) (txHash string) {
 // Unlock 解锁TokenLock合约代币
 func (wl walletLogic) Unlock() (txHash string) {
 	// 合约所有人私钥解锁，获取钱包地址
-	ownerAddress := WalletLogic.PrivateKeyToAddress(config.Config.TokenLockPrivateKey)
+	ownerAddress := wl.PrivateKeyUnlock(config.Config.TokenLockPrivateKey)
 	// 获取TokenLock实例
 	tokenLockInstance := CommonLogic.GetTokenLockInstance()
 	// 创建签名选项

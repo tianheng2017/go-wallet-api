@@ -17,18 +17,18 @@ func (ws walletService) Create(Count uint) (data []resp.WalletCreateResp) {
 	return
 }
 
-// PrivateKeyToAddress 私钥解锁钱包
-func (ws walletService) PrivateKeyToAddress(privateKey string) resp.WalletPrivateKeyToAddressResp {
-	address := logic.WalletLogic.PrivateKeyToAddress(privateKey)
-	return resp.WalletPrivateKeyToAddressResp{
+// PrivateKeyUnlock 私钥解锁钱包
+func (ws walletService) PrivateKeyUnlock(privateKey string) resp.WalletPrivateKeyUnlockResp {
+	address := logic.WalletLogic.PrivateKeyUnlock(privateKey)
+	return resp.WalletPrivateKeyUnlockResp{
 		Address: address,
 	}
 }
 
-// MnemonicToAddressAndPrivateKey 助记词解锁钱包
-func (ws walletService) MnemonicToAddressAndPrivateKey(mnemonic string) resp.WalletMnemonicToAddressAndPrivateKeyResp {
-	address, privateKey := logic.WalletLogic.MnemonicToAddressAndPrivateKey(mnemonic)
-	return resp.WalletMnemonicToAddressAndPrivateKeyResp{
+// MnemonicUnlock 助记词解锁钱包
+func (ws walletService) MnemonicUnlock(mnemonic string) resp.WalletMnemonicUnlockResp {
+	address, privateKey := logic.WalletLogic.MnemonicUnlock(mnemonic)
+	return resp.WalletMnemonicUnlockResp{
 		Address:    address,
 		PrivateKey: privateKey,
 	}

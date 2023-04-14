@@ -18,7 +18,7 @@ type nftLogic struct{}
 // MintSeaDrop 铸造NFT
 func (nl nftLogic) MintSeaDrop(minter string, quantity uint) (txHash string) {
 	// 铸造人私钥解锁，获取钱包
-	fromAddress := WalletLogic.PrivateKeyToAddress(config.Config.NftFromPrivateKey)
+	fromAddress := WalletLogic.PrivateKeyUnlock(config.Config.NftFromPrivateKey)
 	// 校验验证接收人钱包格式
 	CommonLogic.CheckAddress(minter, "接收人")
 	// 获取NFT实例
@@ -62,7 +62,7 @@ func (nl nftLogic) GetOwnerOf(tokenId uint) (address string) {
 // TransferFrom 授权转出NFT
 func (nl nftLogic) TransferFrom(from string, tokenId uint) (txHash string) {
 	// 调用人私钥解锁，获取钱包
-	toAddress := WalletLogic.PrivateKeyToAddress(config.Config.NftFromPrivateKey)
+	toAddress := WalletLogic.PrivateKeyUnlock(config.Config.NftFromPrivateKey)
 	// 校验持有人钱包格式
 	CommonLogic.CheckAddress(from, "持有人")
 	// 校验tokenId的授权地址

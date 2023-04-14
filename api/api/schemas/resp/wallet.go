@@ -13,13 +13,13 @@ type WalletCreateResp struct {
 	Mnemonic   string `json:"mnemonic"`
 }
 
-// WalletPrivateKeyToAddressResp 私钥解锁返回信息
-type WalletPrivateKeyToAddressResp struct {
+// WalletPrivateKeyUnlockResp 私钥解锁返回信息
+type WalletPrivateKeyUnlockResp struct {
 	Address string `json:"address"`
 }
 
-// WalletMnemonicToAddressAndPrivateKeyResp 助记词解锁返回信息
-type WalletMnemonicToAddressAndPrivateKeyResp struct {
+// WalletMnemonicUnlockResp 助记词解锁返回信息
+type WalletMnemonicUnlockResp struct {
 	Address    string `json:"address"`
 	PrivateKey string `json:"privateKey"`
 }

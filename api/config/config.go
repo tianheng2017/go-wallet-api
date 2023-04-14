@@ -42,6 +42,7 @@ var Config = config{
 	UsdtContractAddress: "0x7634d7840f6d0E09B61d0A12f45C6B6Ee0B83f6d",
 
 	// -----------------------------------代币相关配置-----------------------------------
+	// 这不是一个任意的代币，是babytoken，与contracts/token.abi对应
 	// 代币发送人私钥，要改
 	TokenFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// 代币合约地址，要改

@@ -15,8 +15,8 @@ var WalletGroup = core.Group("/wallet")
 func init() {
 	group := WalletGroup
 	group.AddGET("/create", create)
-	group.AddPOST("/privateKeyToAddress", privateKeyToAddress)
-	group.AddPOST("/mnemonicToAddressAndPrivateKey", mnemonicToAddressAndPrivateKey)
+	group.AddPOST("/privateKeyUnlock", privateKeyUnlock)
+	group.AddPOST("/mnemonicUnlock", mnemonicUnlock)
 	group.AddPOST("/getBalance", getBalance)
 	group.AddPOST("/getUsdtBalance", getUsdtBalance)
 	group.AddPOST("/getTokenBalance", getTokenBalance)
@@ -37,17 +37,17 @@ func create(c *gin.Context) {
 }
 
 // 私钥解锁
-func privateKeyToAddress(c *gin.Context) {
-	var privateKeyReq req.WalletPrivateKeyToAddressReq
+func privateKeyUnlock(c *gin.Context) {
+	var privateKeyReq req.WalletPrivateKeyUnlockReq
 	util.VerifyUtil.VerifyBody(c, &privateKeyReq)
-	response.OkWithData(c, wallet.WalletService.PrivateKeyToAddress(privateKeyReq.PrivateKey))
+	response.OkWithData(c, wallet.WalletService.PrivateKeyUnlock(privateKeyReq.PrivateKey))
 }
 
 // 助记词解锁
-func mnemonicToAddressAndPrivateKey(c *gin.Context) {
-	var mnemonicReq req.WalletMnemonicToAddressAndPrivateKeyReq
+func mnemonicUnlock(c *gin.Context) {
+	var mnemonicReq req.WalletMnemonicUnlockReq
 	util.VerifyUtil.VerifyBody(c, &mnemonicReq)
-	response.OkWithData(c, wallet.WalletService.MnemonicToAddressAndPrivateKey(mnemonicReq.Mnemonic))
+	response.OkWithData(c, wallet.WalletService.MnemonicUnlock(mnemonicReq.Mnemonic))
 }
 
 // 查询主网币余额
