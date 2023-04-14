@@ -23,6 +23,10 @@ func init() {
 	group.AddPOST("/transfer", transfer)
 	group.AddPOST("/usdtTransfer", usdtTransfer)
 	group.AddPOST("/tokenTransfer", tokenTransfer)
+	group.AddPOST("/unlock", unlock)
+	group.AddGET("/getUnlockToken", getUnlockToken)
+	group.AddGET("/getLastUnlockTimestamp", getLastUnlockTimestamp)
+	group.AddGET("/getStartTimestamp", getStartTimestamp)
 }
 
 // 生成钱包
@@ -55,14 +59,14 @@ func getBalance(c *gin.Context) {
 
 // 查询Usdt余额
 func getUsdtBalance(c *gin.Context) {
-	var getUsdtBalanceReq req.WalletGetUsdtBalanceReq
+	var getUsdtBalanceReq req.WalletGetBalanceReq
 	util.VerifyUtil.VerifyBody(c, &getUsdtBalanceReq)
 	response.OkWithData(c, wallet.WalletService.GetUsdtBalance(getUsdtBalanceReq.Address))
 }
 
 // 查询Token余额
 func getTokenBalance(c *gin.Context) {
-	var getTokenBalanceReq req.WalletGetTokenBalanceReq
+	var getTokenBalanceReq req.WalletGetBalanceReq
 	util.VerifyUtil.VerifyBody(c, &getTokenBalanceReq)
 	response.OkWithData(c, wallet.WalletService.GetTokenBalance(getTokenBalanceReq.Address))
 }
@@ -76,14 +80,34 @@ func transfer(c *gin.Context) {
 
 // Usdt转账
 func usdtTransfer(c *gin.Context) {
-	var usdtTransferReq req.WalletUsdtTransferReq
+	var usdtTransferReq req.WalletTransferReq
 	util.VerifyUtil.VerifyBody(c, &usdtTransferReq)
 	response.OkWithData(c, wallet.WalletService.UsdtTransfer(usdtTransferReq.To, usdtTransferReq.Amount))
 }
 
 // Token转账
 func tokenTransfer(c *gin.Context) {
-	var tokenTransferReq req.WalletTokenTransferReq
+	var tokenTransferReq req.WalletTransferReq
 	util.VerifyUtil.VerifyBody(c, &tokenTransferReq)
 	response.OkWithData(c, wallet.WalletService.TokenTransfer(tokenTransferReq.To, tokenTransferReq.Amount))
+}
+
+// TokenLock合约代币解锁
+func unlock(c *gin.Context) {
+	response.OkWithData(c, wallet.WalletService.Unlock())
+}
+
+// 获取TokenLock合约已解锁代币数量
+func getUnlockToken(c *gin.Context) {
+	response.OkWithData(c, wallet.WalletService.GetUnlockToken())
+}
+
+// 获取TokenLock上次解锁时间
+func getLastUnlockTimestamp(c *gin.Context) {
+	response.OkWithData(c, wallet.WalletService.GetLastUnlockTimestamp())
+}
+
+// 获取TokenLock合约启动时间
+func getStartTimestamp(c *gin.Context) {
+	response.OkWithData(c, wallet.WalletService.GetStartTimestamp())
 }

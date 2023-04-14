@@ -35,49 +35,81 @@ func (ws walletService) MnemonicToAddressAndPrivateKey(mnemonic string) resp.Wal
 }
 
 // GetBalance 查询余额
-func (ws walletService) GetBalance(address string) resp.WalletGetBalanceResp {
+func (ws walletService) GetBalance(address string) resp.WalletBalanceResp {
 	balance := logic.CommonLogic.GetBalance(address)
-	return resp.WalletGetBalanceResp{
+	return resp.WalletBalanceResp{
 		Balance: balance,
 	}
 }
 
 // GetUsdtBalance 查询USDT余额
-func (ws walletService) GetUsdtBalance(address string) resp.WalletGetUsdtBalanceResp {
+func (ws walletService) GetUsdtBalance(address string) resp.WalletBalanceResp {
 	balance := logic.CommonLogic.GetUsdtBalance(address)
-	return resp.WalletGetUsdtBalanceResp{
+	return resp.WalletBalanceResp{
 		Balance: balance,
 	}
 }
 
 // GetTokenBalance 查询Token余额
-func (ws walletService) GetTokenBalance(address string) resp.WalletGetTokenBalanceResp {
+func (ws walletService) GetTokenBalance(address string) resp.WalletBalanceResp {
 	balance := logic.CommonLogic.GetTokenBalance(address)
-	return resp.WalletGetTokenBalanceResp{
+	return resp.WalletBalanceResp{
 		Balance: balance,
 	}
 }
 
 // Transfer 主网币转账
-func (ws walletService) Transfer(to string, amount float64) resp.WalletTransferResp {
+func (ws walletService) Transfer(to string, amount float64) resp.WalletTxResp {
 	tx := logic.WalletLogic.Transfer(to, amount)
-	return resp.WalletTransferResp{
+	return resp.WalletTxResp{
 		Tx: tx,
 	}
 }
 
 // UsdtTransfer USDT转账
-func (ws walletService) UsdtTransfer(to string, amount float64) resp.WalletUsdtTransferResp {
+func (ws walletService) UsdtTransfer(to string, amount float64) resp.WalletTxResp {
 	tx := logic.WalletLogic.UsdtTransfer(to, amount)
-	return resp.WalletUsdtTransferResp{
+	return resp.WalletTxResp{
 		Tx: tx,
 	}
 }
 
 // TokenTransfer Token转账
-func (ws walletService) TokenTransfer(to string, amount float64) resp.WalletTokenTransferResp {
+func (ws walletService) TokenTransfer(to string, amount float64) resp.WalletTxResp {
 	tx := logic.WalletLogic.TokenTransfer(to, amount)
-	return resp.WalletTokenTransferResp{
+	return resp.WalletTxResp{
 		Tx: tx,
+	}
+}
+
+// Unlock TokenLock解锁合约代币
+func (ws walletService) Unlock() resp.WalletTxResp {
+	tx := logic.WalletLogic.Unlock()
+	return resp.WalletTxResp{
+		Tx: tx,
+	}
+}
+
+// GetUnlockToken 获取TokenLock已解锁代币数量
+func (ws walletService) GetUnlockToken() resp.WalletNumResp {
+	num := logic.WalletLogic.GetUnlockToken()
+	return resp.WalletNumResp{
+		Num: num,
+	}
+}
+
+// GetLastUnlockTimestamp 获取上次解锁时间戳
+func (ws walletService) GetLastUnlockTimestamp() resp.WalletTimestampResp {
+	timestamp := logic.WalletLogic.GetLastUnlockTimestamp()
+	return resp.WalletTimestampResp{
+		Timestamp: timestamp,
+	}
+}
+
+// GetStartTimestamp 获取合约启动时间戳
+func (ws walletService) GetStartTimestamp() resp.WalletTimestampResp {
+	startTimestamp := logic.WalletLogic.GetStartTimestamp()
+	return resp.WalletTimestampResp{
+		Timestamp: startTimestamp,
 	}
 }

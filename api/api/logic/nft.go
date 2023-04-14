@@ -24,14 +24,7 @@ func (nl nftLogic) MintSeaDrop(minter string, quantity uint) (txHash string) {
 	// 获取NFT实例
 	nftInstance := CommonLogic.GetNftInstance()
 	// 创建签名选项
-	auth, err := bind.NewKeyedTransactorWithChainID(
-		CommonLogic.GetTruePrivateKey(config.Config.TokenFromPrivateKey),
-		CommonLogic.GetChainID(),
-	)
-	util.CheckUtil.CheckApiErr(err, "创建签名选项失败")
-	auth.Nonce = big.NewInt(int64(CommonLogic.GetNonce(fromAddress)))
-	auth.GasLimit = uint64(600000)
-	auth.GasPrice = CommonLogic.GetGasPrice()
+	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, fromAddress)
 	// 生成未签名事务
 	tx, err := nftInstance.MintSeaDrop(
 		auth,
@@ -80,14 +73,7 @@ func (nl nftLogic) TransferFrom(from string, tokenId uint) (txHash string) {
 	// 获取NFT实例
 	nftInstance := CommonLogic.GetNftInstance()
 	// 创建签名选项
-	auth, err := bind.NewKeyedTransactorWithChainID(
-		CommonLogic.GetTruePrivateKey(config.Config.NftFromPrivateKey),
-		CommonLogic.GetChainID(),
-	)
-	util.CheckUtil.CheckApiErr(err, "创建签名选项失败")
-	auth.Nonce = big.NewInt(int64(CommonLogic.GetNonce(toAddress)))
-	auth.GasLimit = uint64(600000)
-	auth.GasPrice = CommonLogic.GetGasPrice()
+	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, toAddress)
 	// 生成未签名事务
 	tx, err := nftInstance.TransferFrom(
 		auth,

@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"server/core"
 	"server/core/response"
 
@@ -29,7 +28,6 @@ func (cu checkUtil) CheckErr(err error, template string, args ...interface{}) {
 // CheckApiErr 抛出API错误
 func (cu checkUtil) CheckApiErr(err error, msg string) {
 	if err != nil {
-		fmt.Println(err)
-		panic(response.Failed.Make(msg))
+		panic(response.Failed.Make(msg + ": " + err.Error()))
 	}
 }

@@ -67,6 +67,13 @@ func (cm commonLogic) GetTokenInstance() (tokenInstance *contracts.Token) {
 	return
 }
 
+// GetTokenLockInstance 获取TokenLock实例
+func (cm commonLogic) GetTokenLockInstance() (tokenLockInstance *contracts.TokenLock) {
+	tokenLockInstance, err := contracts.NewTokenLock(common.HexToAddress(config.Config.TokenLockContractAddress), CommonLogic.NewClient())
+	util.CheckUtil.CheckApiErr(err, "获取TokenLock实例失败")
+	return
+}
+
 // GetAuth 获取签名选项
 func (cm commonLogic) GetAuth(PrivateKey string, address string) (auth *bind.TransactOpts) {
 	auth, err := bind.NewKeyedTransactorWithChainID(

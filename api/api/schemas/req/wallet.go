@@ -20,35 +20,8 @@ type WalletGetBalanceReq struct {
 	Address string `form:"address" binding:"required"` // 钱包地址
 }
 
-// WalletGetUsdtBalanceReq 获取USDT余额参数
-type WalletGetUsdtBalanceReq struct {
-	Address string `form:"address" binding:"required"` // 钱包地址
-}
-
-// WalletGetTokenBalanceReq 获取Token余额参数
-type WalletGetTokenBalanceReq struct {
-	Address string `form:"address" binding:"required"` // 钱包地址
-}
-
-// WalletTransferReq 主网币转账参数
+// WalletTransferReq 转账参数
 type WalletTransferReq struct {
 	To     string  `form:"to" binding:"required"` // 收款方钱包地址
 	Amount float64 `form:"amount" binding:"gt=0"` // 转账金额
-}
-
-// WalletUsdtTransferReq USDT转账参数
-type WalletUsdtTransferReq struct {
-	To     string  `form:"to" binding:"required"` // 收款方钱包地址
-	Amount float64 `form:"amount" binding:"gt=0"` // 转账金额
-}
-
-// WalletTokenTransferReq Token转账参数
-type WalletTokenTransferReq struct {
-	To     string  `form:"to" binding:"required"` // 收款方钱包地址
-	Amount float64 `form:"amount" binding:"gt=0"` // 转账金额
-}
-
-// WalletGetAbiReq 获取合约ABI参数
-type WalletGetAbiReq struct {
-	Address string `form:"address" binding:"required"` // 合约地址
 }

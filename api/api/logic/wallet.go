@@ -3,15 +3,18 @@ package logic
 import (
 	"crypto/ecdsa"
 	"errors"
+	"math/big"
 	"server/api/schemas/resp"
 	"server/config"
 	"server/util"
 	"strings"
 	"sync"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	hdwallet "github.com/miguelmota/go-ethereum-hdwallet"
+	"github.com/shopspring/decimal"
 	bip39 "github.com/tyler-smith/go-bip39"
 )
 
@@ -150,5 +153,52 @@ func (wl walletLogic) TokenTransfer(to string, amount float64) (txHash string) {
 	util.CheckUtil.CheckApiErr(err, "转账失败")
 	// 返回txHash
 	txHash = tx.Hash().Hex()
+	return
+}
+
+// Unlock 解锁TokenLock合约代币
+func (wl walletLogic) Unlock() (txHash string) {
+	// 合约所有人私钥解锁，获取钱包地址
+	ownerAddress := WalletLogic.PrivateKeyToAddress(config.Config.TokenLockPrivateKey)
+	// 获取TokenLock实例
+	tokenLockInstance := CommonLogic.GetTokenLockInstance()
+	// 创建签名选项
+	auth := CommonLogic.GetAuth(config.Config.TokenLockPrivateKey, ownerAddress)
+	// 生成未签名事务
+	tx, err := tokenLockInstance.Unlock(auth)
+	util.CheckUtil.CheckApiErr(err, "解锁失败")
+	// 返回txHash
+	txHash = tx.Hash().Hex()
+	return
+}
+
+// GetUnlockToken 获取已解锁的代币数量
+func (wl walletLogic) GetUnlockToken() (result decimal.Decimal) {
+	// 获取TokenLock实例
+	tokenLockInstance := CommonLogic.GetTokenLockInstance()
+	// 创建签名选项
+	unLockToken, err := tokenLockInstance.UnlockedToken(&bind.CallOpts{})
+	util.CheckUtil.CheckApiErr(err, "获取已解锁代币数量失败")
+	result = CommonLogic.ToDecimal(unLockToken, 18)
+	return
+}
+
+// GetLastUnlockTimestamp 获取上次解锁时间戳
+func (wl walletLogic) GetLastUnlockTimestamp() (timestamp *big.Int) {
+	// 获取TokenLock实例
+	tokenLockInstance := CommonLogic.GetTokenLockInstance()
+	// 创建签名选项
+	timestamp, err := tokenLockInstance.LastUnlockTimestamp(&bind.CallOpts{})
+	util.CheckUtil.CheckApiErr(err, "获取上次解锁时间戳失败")
+	return
+}
+
+// GetStartTimestamp 获取解锁启动时间戳
+func (wl walletLogic) GetStartTimestamp() (startTimestamp *big.Int) {
+	// 获取TokenLock实例
+	tokenLockInstance := CommonLogic.GetTokenLockInstance()
+	// 创建签名选项
+	startTimestamp, err := tokenLockInstance.StartTimestamp(&bind.CallOpts{})
+	util.CheckUtil.CheckApiErr(err, "获取解锁启动时间戳失败")
 	return
 }

@@ -45,13 +45,13 @@ var Config = config{
 	// 代币发送人私钥，要改
 	TokenFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// 代币合约地址，要改
-	TokenContractAddress: "0x2bC3Ed169511Cc923338754DA100547fEdF838Cd",
+	TokenContractAddress: "0x053F6f2a5f9121d089Bc4cbf540F2e98Ed250519",
 
 	// -----------------------------------TokenLock解锁配置------------------------------
 	// TokenLock合约所有人私钥，要改
 	TokenLockPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// TokenLock合约地址，要改
-	TokenLockContractAddress: "0x7c2E3f2C2F2fC8CDbd1E72212F79d0Ed13C9d2B7",
+	TokenLockContractAddress: "0x076039073104CAd7804f236f200544634803A8FE",
 }
 
 type config struct {

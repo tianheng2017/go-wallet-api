@@ -1,6 +1,10 @@
 package resp
 
-import "github.com/shopspring/decimal"
+import (
+	"math/big"
+
+	"github.com/shopspring/decimal"
+)
 
 // WalletCreateResp 钱包创建返回信息
 type WalletCreateResp struct {
@@ -20,32 +24,22 @@ type WalletMnemonicToAddressAndPrivateKeyResp struct {
 	PrivateKey string `json:"privateKey"`
 }
 
-// WalletGetBalanceResp 查询余额返回信息
-type WalletGetBalanceResp struct {
+// WalletBalanceResp 余额返回信息
+type WalletBalanceResp struct {
 	Balance decimal.Decimal `json:"balance"`
 }
 
-// WalletGetUsdtBalanceResp 查询USDT余额返回信息
-type WalletGetUsdtBalanceResp struct {
-	Balance decimal.Decimal `json:"balance"`
-}
-
-// WalletGetTokenBalanceResp 查询Token余额返回信息
-type WalletGetTokenBalanceResp struct {
-	Balance decimal.Decimal `json:"balance"`
-}
-
-// WalletTransferResp 主网币转账返回信息
-type WalletTransferResp struct {
+// WalletTxResp 返回Tx
+type WalletTxResp struct {
 	Tx string `json:"tx"`
 }
 
-// WalletTransferResp USDT转账返回信息
-type WalletUsdtTransferResp struct {
-	Tx string `json:"tx"`
+// WalletNumResp 已解锁代币数量返回信息
+type WalletNumResp struct {
+	Num decimal.Decimal `json:"num"`
 }
 
-// WalletTokenferResp Token转账返回信息
-type WalletTokenTransferResp struct {
-	Tx string `json:"tx"`
+// WalletTimestampResp 时间戳返回信息
+type WalletTimestampResp struct {
+	Timestamp *big.Int `json:"timestamp"`
 }

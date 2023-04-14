@@ -11,17 +11,17 @@ var NftService = nftService{}
 type nftService struct{}
 
 // MintSeaDrop 铸造NFT
-func (ws nftService) MintSeaDrop(minter string, quantity uint) resp.NftMintSeaDropResp {
+func (ws nftService) MintSeaDrop(minter string, quantity uint) resp.NftTxResp {
 	tx := logic.NftLogic.MintSeaDrop(minter, quantity)
-	return resp.NftMintSeaDropResp{
+	return resp.NftTxResp{
 		Tx: tx,
 	}
 }
 
 // TransferFrom 授权NFT转出
-func (ws nftService) TransferFrom(from string, tokenId uint) resp.NftTransferFromResp {
+func (ws nftService) TransferFrom(from string, tokenId uint) resp.NftTxResp {
 	tx := logic.NftLogic.TransferFrom(from, tokenId)
-	return resp.NftTransferFromResp{
+	return resp.NftTxResp{
 		Tx: tx,
 	}
 }
