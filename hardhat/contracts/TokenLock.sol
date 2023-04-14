@@ -17,7 +17,7 @@ contract TokenLock {
     // 360天后每天固定解锁1000个
     uint256 private constant MIN_DAILY_UNLOCK = 1000 * DECIMAL_MULTIPLIER;
 
-    // 合约启动时间
+    // 解锁启动时间
     uint256 public startTimestamp;
     // 已解锁的数量
     uint256 public unlockedToken;
@@ -56,7 +56,7 @@ contract TokenLock {
 
     // 代币解锁
     // 定时任务触发，多次触发无影响
-    function unlock() public onlyOwner {
+    function unlock() external onlyOwner {
         // 距离上次解锁时间必须大于1天
         require(block.timestamp - lastUnlockTimestamp >= 1 days, "The time since the last unlock is less than one day.");
         // 合约代币余额至少大于1000
@@ -65,7 +65,7 @@ contract TokenLock {
         uint256 daysSinceStart = (block.timestamp - startTimestamp) / 1 days;
         // 计算自启动以来减半了多少次
         uint256 periodsSinceStart = daysSinceStart / PERIOD_DAYS;
-        // 计算今天应该解锁的数量
+        // 计算当前应解锁的数量
         uint256 dailyUnlock;
 
         // 如果自启动以来过去了超过360天，则每天固定解锁1000个token
@@ -78,10 +78,10 @@ contract TokenLock {
 
         // 计算自上一次解锁以来过去了多少天
         uint256 daysSinceLastUnlock = daysSinceStart - (lastUnlockTimestamp - startTimestamp) / 1 days;
-        // 计算新解锁的代币数量
+        // 计算当前待解锁的代币数量
         uint256 newUnlockedToken = daysSinceLastUnlock * dailyUnlock;
 
-        // 已解锁的代币数量增加
+        // 已解锁的数量增加
         unlockedToken += newUnlockedToken;
         // 记录本次解锁时间
         lastUnlockTimestamp = block.timestamp;
@@ -91,7 +91,7 @@ contract TokenLock {
     }
 
     // 将已解锁的代币转账给指定地址
-    function transfer(address to, uint256 amount) public onlyOwner {
+    function transfer(address to, uint256 amount) external onlyOwner {
         // 接收人不能时零地址和本合约地址
         require(to != address(0), "Recipient address cannot be zero address.");
         require(to != address(this), "Recipient address cannot be contract address.");

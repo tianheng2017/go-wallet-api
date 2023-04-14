@@ -29,7 +29,7 @@ var Config = config{
 	// NFT铸造人私钥(去掉0x)，要改
 	NftFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// NFT合约地址，要改
-	NftContractAddress: "0x246C53CB65366ef73076a08804b08afF169F58BD",
+	NftContractAddress: "0x1fDEdE3eBe5384776E4c2BA46a5c4b703daD83a6",
 
 	// -----------------------------------主网币转账配置---------------------------------
 	// 主网币发送人私钥(去掉0x)，要改
@@ -39,20 +39,20 @@ var Config = config{
 	// USDT发送人私钥(去掉0x)，要改
 	UsdtFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// USDT合约地址，要改
-	UsdtContractAddress: "0x7634d7840f6d0E09B61d0A12f45C6B6Ee0B83f6d",
+	UsdtContractAddress: "0xFe195F0B9A6590b9D691c59db94d3611542364b3",
 
 	// -----------------------------------代币相关配置-----------------------------------
 	// 这不是一个任意的代币，是babytoken，与contracts/token.abi对应
-	// 代币发送人私钥，要改
+	// 代币发送人私钥(去掉0x)，要改
 	TokenFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// 代币合约地址，要改
-	TokenContractAddress: "0x053F6f2a5f9121d089Bc4cbf540F2e98Ed250519",
+	TokenContractAddress: "0x1eD10a20F94F56C103305f61FA1aAaf023F51eB6",
 
 	// -----------------------------------TokenLock解锁配置------------------------------
-	// TokenLock合约所有人私钥，要改
+	// TokenLock合约所有人私钥(去掉0x)，要改
 	TokenLockPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// TokenLock合约地址，要改
-	TokenLockContractAddress: "0x076039073104CAd7804f236f200544634803A8FE",
+	TokenLockContractAddress: "0x825A62186a9386Ec3EAb3CC5C442ce51BE8Fb321",
 }
 
 type config struct {

@@ -1,8 +1,8 @@
-## go-wallet-api
+## api
 
 ### 运行方法
 ```
-cd go-wallet-api
+cd api
 go build 或 go run main.go
 
 go build 是生成二进制文件，生产环境用
@@ -13,3 +13,4 @@ supervisor 中添加守护进程（服务器重启，服务会自动启动）
 ```
 #### 接口参考API文档
 #### 配置文件：config/config.go
+#### 合约ABI转go，contracts/，具体见内说明
