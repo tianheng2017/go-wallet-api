@@ -3,15 +3,12 @@ package logic
 import (
 	"crypto/ecdsa"
 	"errors"
-	"math/big"
 	"server/api/schemas/resp"
 	"server/config"
-	"server/contracts"
 	"server/util"
 	"strings"
 	"sync"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	hdwallet "github.com/miguelmota/go-ethereum-hdwallet"
@@ -117,20 +114,9 @@ func (wl walletLogic) UsdtTransfer(to string, amount float64) (txHash string) {
 	// 校验收款方钱包格式
 	CommonLogic.CheckAddress(to, "收款方")
 	// 获取USDT实例
-	usdtInstance, err := contracts.NewUsdtTransactor(
-		common.HexToAddress(config.Config.UsdtContractAddress),
-		CommonLogic.NewClient(),
-	)
-	util.CheckUtil.CheckApiErr(err, "获取USDT实例失败")
+	usdtInstance := CommonLogic.GetUsdtInstance()
 	// 创建签名选项
-	auth, err := bind.NewKeyedTransactorWithChainID(
-		CommonLogic.GetTruePrivateKey(config.Config.UsdtFromPrivateKey),
-		CommonLogic.GetChainID(),
-	)
-	util.CheckUtil.CheckApiErr(err, "创建签名选项失败")
-	auth.Nonce = big.NewInt(int64(CommonLogic.GetNonce(fromAddress)))
-	auth.GasLimit = uint64(600000)
-	auth.GasPrice = CommonLogic.GetGasPrice()
+	auth := CommonLogic.GetAuth(config.Config.UsdtFromPrivateKey, fromAddress)
 	// 生成未签名事务
 	tx, err := usdtInstance.Transfer(
 		auth,
@@ -152,20 +138,9 @@ func (wl walletLogic) TokenTransfer(to string, amount float64) (txHash string) {
 	// 校验收款方钱包格式
 	CommonLogic.CheckAddress(to, "收款方")
 	// 获取Token实例
-	tokenInstance, err := contracts.NewTokenTransactor(
-		common.HexToAddress(config.Config.TokenContractAddress),
-		CommonLogic.NewClient(),
-	)
-	util.CheckUtil.CheckApiErr(err, "获取USDT实例失败")
+	tokenInstance := CommonLogic.GetTokenInstance()
 	// 创建签名选项
-	auth, err := bind.NewKeyedTransactorWithChainID(
-		CommonLogic.GetTruePrivateKey(config.Config.TokenFromPrivateKey),
-		CommonLogic.GetChainID(),
-	)
-	util.CheckUtil.CheckApiErr(err, "创建签名选项失败")
-	auth.Nonce = big.NewInt(int64(CommonLogic.GetNonce(fromAddress)))
-	auth.GasLimit = uint64(600000)
-	auth.GasPrice = CommonLogic.GetGasPrice()
+	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, fromAddress)
 	// 生成未签名事务
 	tx, err := tokenInstance.Transfer(
 		auth,

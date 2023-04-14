@@ -4,7 +4,6 @@ import (
 	"errors"
 	"math/big"
 	"server/config"
-	"server/contracts"
 	"server/util"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -16,13 +15,6 @@ var NftLogic = nftLogic{}
 // nftLogic NFT逻辑层
 type nftLogic struct{}
 
-// GetNftInstance 获取NFT实例
-func (nl nftLogic) GetNftInstance() (nftInstance *contracts.Nft) {
-	nftInstance, err := contracts.NewNft(common.HexToAddress(config.Config.NftContractAddress), CommonLogic.NewClient())
-	util.CheckUtil.CheckApiErr(err, "获取NFT实例失败")
-	return
-}
-
 // MintSeaDrop 铸造NFT
 func (nl nftLogic) MintSeaDrop(minter string, quantity uint) (txHash string) {
 	// 铸造人私钥解锁，获取钱包
@@ -30,7 +22,7 @@ func (nl nftLogic) MintSeaDrop(minter string, quantity uint) (txHash string) {
 	// 校验验证接收人钱包格式
 	CommonLogic.CheckAddress(minter, "接收人")
 	// 获取NFT实例
-	nftInstance := nl.GetNftInstance()
+	nftInstance := CommonLogic.GetNftInstance()
 	// 创建签名选项
 	auth, err := bind.NewKeyedTransactorWithChainID(
 		CommonLogic.GetTruePrivateKey(config.Config.TokenFromPrivateKey),
@@ -55,7 +47,7 @@ func (nl nftLogic) MintSeaDrop(minter string, quantity uint) (txHash string) {
 // GetApproved 获取NFT授权地址
 func (nl nftLogic) GetApproved(tokenId uint) (address string) {
 	// 获取NFT实例
-	nftInstance := nl.GetNftInstance()
+	nftInstance := CommonLogic.GetNftInstance()
 	// 获取授权地址
 	approved, err := nftInstance.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
 	util.CheckUtil.CheckApiErr(err, "获取NFT授权地址失败")
@@ -66,7 +58,7 @@ func (nl nftLogic) GetApproved(tokenId uint) (address string) {
 // GetOwnerOf 获取NFT持有人
 func (nl nftLogic) GetOwnerOf(tokenId uint) (address string) {
 	// 获取NFT实例
-	nftInstance := nl.GetNftInstance()
+	nftInstance := CommonLogic.GetNftInstance()
 	// 获取授权地址
 	approved, err := nftInstance.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
 	util.CheckUtil.CheckApiErr(err, "获取NFT持有人失败")
@@ -86,7 +78,7 @@ func (nl nftLogic) TransferFrom(from string, tokenId uint) (txHash string) {
 		util.CheckUtil.CheckApiErr(errors.New(""), "NFT未授权给铸造人")
 	}
 	// 获取NFT实例
-	nftInstance := nl.GetNftInstance()
+	nftInstance := CommonLogic.GetNftInstance()
 	// 创建签名选项
 	auth, err := bind.NewKeyedTransactorWithChainID(
 		CommonLogic.GetTruePrivateKey(config.Config.NftFromPrivateKey),

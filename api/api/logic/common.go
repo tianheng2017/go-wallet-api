@@ -46,6 +46,40 @@ func (cm commonLogic) NewClient() *ethclient.Client {
 	return client
 }
 
+// GetNftInstance 获取NFT实例
+func (cm commonLogic) GetNftInstance() (nftInstance *contracts.Nft) {
+	nftInstance, err := contracts.NewNft(common.HexToAddress(config.Config.NftContractAddress), CommonLogic.NewClient())
+	util.CheckUtil.CheckApiErr(err, "获取NFT实例失败")
+	return
+}
+
+// GetUsdtInstance 获取Usdt实例
+func (cm commonLogic) GetUsdtInstance() (usdtInstance *contracts.Usdt) {
+	usdtInstance, err := contracts.NewUsdt(common.HexToAddress(config.Config.UsdtContractAddress), CommonLogic.NewClient())
+	util.CheckUtil.CheckApiErr(err, "获取Usdt实例失败")
+	return
+}
+
+// GetTokenInstance 获取Token实例
+func (cm commonLogic) GetTokenInstance() (tokenInstance *contracts.Token) {
+	tokenInstance, err := contracts.NewToken(common.HexToAddress(config.Config.TokenContractAddress), CommonLogic.NewClient())
+	util.CheckUtil.CheckApiErr(err, "获取Token实例失败")
+	return
+}
+
+// GetAuth 获取签名选项
+func (cm commonLogic) GetAuth(PrivateKey string, address string) (auth *bind.TransactOpts) {
+	auth, err := bind.NewKeyedTransactorWithChainID(
+		CommonLogic.GetTruePrivateKey(PrivateKey),
+		CommonLogic.GetChainID(),
+	)
+	util.CheckUtil.CheckApiErr(err, "创建签名选项失败")
+	auth.Nonce = big.NewInt(int64(CommonLogic.GetNonce(address)))
+	auth.GasLimit = uint64(600000)
+	auth.GasPrice = CommonLogic.GetGasPrice()
+	return
+}
+
 // CheckAddress 检查钱包地址
 func (cm commonLogic) CheckAddress(address string, extra string) (result bool) {
 	result = true
