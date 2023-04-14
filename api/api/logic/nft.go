@@ -10,7 +10,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-var NftLogic = nftLogic{}
+var (
+	NftLogic    = nftLogic{}
+	nftInstance = CommonLogic.GetNftInstance()
+)
 
 // nftLogic NFT逻辑层
 type nftLogic struct{}
@@ -21,8 +24,6 @@ func (nl nftLogic) MintSeaDrop(minter string, quantity uint) (txHash string) {
 	fromAddress := WalletLogic.PrivateKeyUnlock(config.Config.NftFromPrivateKey)
 	// 校验验证接收人钱包格式
 	CommonLogic.CheckAddress(minter, "接收人")
-	// 获取NFT实例
-	nftInstance := CommonLogic.GetNftInstance()
 	// 创建签名选项
 	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, fromAddress)
 	// 生成未签名事务
@@ -39,8 +40,6 @@ func (nl nftLogic) MintSeaDrop(minter string, quantity uint) (txHash string) {
 
 // GetApproved 获取NFT授权地址
 func (nl nftLogic) GetApproved(tokenId uint) (address string) {
-	// 获取NFT实例
-	nftInstance := CommonLogic.GetNftInstance()
 	// 获取授权地址
 	approved, err := nftInstance.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
 	util.CheckUtil.CheckApiErr(err, "获取NFT授权地址失败")
@@ -50,8 +49,6 @@ func (nl nftLogic) GetApproved(tokenId uint) (address string) {
 
 // GetOwnerOf 获取NFT持有人
 func (nl nftLogic) GetOwnerOf(tokenId uint) (address string) {
-	// 获取NFT实例
-	nftInstance := CommonLogic.GetNftInstance()
 	// 获取授权地址
 	approved, err := nftInstance.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
 	util.CheckUtil.CheckApiErr(err, "获取NFT持有人失败")
@@ -70,8 +67,6 @@ func (nl nftLogic) TransferFrom(from string, tokenId uint) (txHash string) {
 	if approved != toAddress {
 		util.CheckUtil.CheckApiErr(errors.New(""), "NFT未授权给铸造人")
 	}
-	// 获取NFT实例
-	nftInstance := CommonLogic.GetNftInstance()
 	// 创建签名选项
 	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, toAddress)
 	// 生成未签名事务

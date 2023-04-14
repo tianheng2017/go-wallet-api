@@ -18,7 +18,12 @@ import (
 	bip39 "github.com/tyler-smith/go-bip39"
 )
 
-var WalletLogic = walletLogic{}
+var (
+	WalletLogic       = walletLogic{}
+	usdtInstance      = CommonLogic.GetUsdtInstance()
+	tokenInstance     = CommonLogic.GetTokenInstance()
+	tokenLockInstance = CommonLogic.GetTokenLockInstance()
+)
 
 // walletLogic 钱包逻辑层
 type walletLogic struct{}
@@ -116,8 +121,6 @@ func (wl walletLogic) UsdtTransfer(to string, amount float64) (txHash string) {
 	CommonLogic.CheckUsdtBalance(fromAddress, amount)
 	// 校验收款方钱包格式
 	CommonLogic.CheckAddress(to, "收款方")
-	// 获取USDT实例
-	usdtInstance := CommonLogic.GetUsdtInstance()
 	// 创建签名选项
 	auth := CommonLogic.GetAuth(config.Config.UsdtFromPrivateKey, fromAddress)
 	// 生成未签名事务
@@ -140,8 +143,6 @@ func (wl walletLogic) TokenTransfer(to string, amount float64) (txHash string) {
 	CommonLogic.CheckTokenBalance(fromAddress, amount)
 	// 校验收款方钱包格式
 	CommonLogic.CheckAddress(to, "收款方")
-	// 获取Token实例
-	tokenInstance := CommonLogic.GetTokenInstance()
 	// 创建签名选项
 	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, fromAddress)
 	// 生成未签名事务
@@ -160,8 +161,6 @@ func (wl walletLogic) TokenTransfer(to string, amount float64) (txHash string) {
 func (wl walletLogic) Unlock() (txHash string) {
 	// 合约所有人私钥解锁，获取钱包地址
 	ownerAddress := wl.PrivateKeyUnlock(config.Config.TokenLockPrivateKey)
-	// 获取TokenLock实例
-	tokenLockInstance := CommonLogic.GetTokenLockInstance()
 	// 创建签名选项
 	auth := CommonLogic.GetAuth(config.Config.TokenLockPrivateKey, ownerAddress)
 	// 生成未签名事务
@@ -174,9 +173,6 @@ func (wl walletLogic) Unlock() (txHash string) {
 
 // GetUnlockToken 获取已解锁的代币数量
 func (wl walletLogic) GetUnlockToken() (result decimal.Decimal) {
-	// 获取TokenLock实例
-	tokenLockInstance := CommonLogic.GetTokenLockInstance()
-	// 创建签名选项
 	unLockToken, err := tokenLockInstance.UnlockedToken(&bind.CallOpts{})
 	util.CheckUtil.CheckApiErr(err, "获取已解锁代币数量失败")
 	result = CommonLogic.ToDecimal(unLockToken, 18)
@@ -185,9 +181,6 @@ func (wl walletLogic) GetUnlockToken() (result decimal.Decimal) {
 
 // GetLastUnlockTimestamp 获取上次解锁时间戳
 func (wl walletLogic) GetLastUnlockTimestamp() (timestamp *big.Int) {
-	// 获取TokenLock实例
-	tokenLockInstance := CommonLogic.GetTokenLockInstance()
-	// 创建签名选项
 	timestamp, err := tokenLockInstance.LastUnlockTimestamp(&bind.CallOpts{})
 	util.CheckUtil.CheckApiErr(err, "获取上次解锁时间戳失败")
 	return
@@ -195,9 +188,6 @@ func (wl walletLogic) GetLastUnlockTimestamp() (timestamp *big.Int) {
 
 // GetStartTimestamp 获取解锁启动时间戳
 func (wl walletLogic) GetStartTimestamp() (startTimestamp *big.Int) {
-	// 获取TokenLock实例
-	tokenLockInstance := CommonLogic.GetTokenLockInstance()
-	// 创建签名选项
 	startTimestamp, err := tokenLockInstance.StartTimestamp(&bind.CallOpts{})
 	util.CheckUtil.CheckApiErr(err, "获取解锁启动时间戳失败")
 	return

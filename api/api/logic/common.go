@@ -48,28 +48,40 @@ func (cm commonLogic) NewClient() *ethclient.Client {
 
 // GetNftInstance 获取NFT实例
 func (cm commonLogic) GetNftInstance() (nftInstance *contracts.Nft) {
-	nftInstance, err := contracts.NewNft(common.HexToAddress(config.Config.NftContractAddress), CommonLogic.NewClient())
+	nftInstance, err := contracts.NewNft(
+		common.HexToAddress(config.Config.NftContractAddress),
+		CommonLogic.NewClient(),
+	)
 	util.CheckUtil.CheckApiErr(err, "获取NFT实例失败")
 	return
 }
 
 // GetUsdtInstance 获取Usdt实例
 func (cm commonLogic) GetUsdtInstance() (usdtInstance *contracts.Usdt) {
-	usdtInstance, err := contracts.NewUsdt(common.HexToAddress(config.Config.UsdtContractAddress), CommonLogic.NewClient())
+	usdtInstance, err := contracts.NewUsdt(
+		common.HexToAddress(config.Config.UsdtContractAddress),
+		CommonLogic.NewClient(),
+	)
 	util.CheckUtil.CheckApiErr(err, "获取Usdt实例失败")
 	return
 }
 
 // GetTokenInstance 获取Token实例
 func (cm commonLogic) GetTokenInstance() (tokenInstance *contracts.Token) {
-	tokenInstance, err := contracts.NewToken(common.HexToAddress(config.Config.TokenContractAddress), CommonLogic.NewClient())
+	tokenInstance, err := contracts.NewToken(
+		common.HexToAddress(config.Config.TokenContractAddress),
+		CommonLogic.NewClient(),
+	)
 	util.CheckUtil.CheckApiErr(err, "获取Token实例失败")
 	return
 }
 
 // GetTokenLockInstance 获取TokenLock实例
 func (cm commonLogic) GetTokenLockInstance() (tokenLockInstance *contracts.TokenLock) {
-	tokenLockInstance, err := contracts.NewTokenLock(common.HexToAddress(config.Config.TokenLockContractAddress), CommonLogic.NewClient())
+	tokenLockInstance, err := contracts.NewTokenLock(
+		common.HexToAddress(config.Config.TokenLockContractAddress),
+		CommonLogic.NewClient(),
+	)
 	util.CheckUtil.CheckApiErr(err, "获取TokenLock实例失败")
 	return
 }
@@ -204,7 +216,11 @@ func (cm commonLogic) ToCommonAddress(address string) (commonAddress string) {
 // GetBalance 获取钱包余额
 func (cm commonLogic) GetBalance(address string) (result decimal.Decimal) {
 	cm.CheckAddress(address, "")
-	balance, err := cm.NewClient().BalanceAt(context.Background(), common.HexToAddress(address), nil)
+	balance, err := cm.NewClient().BalanceAt(
+		context.Background(),
+		common.HexToAddress(address),
+		nil,
+	)
 	util.CheckUtil.CheckApiErr(err, "查询余额失败")
 	result = cm.ToDecimal(balance, 18)
 	return
@@ -254,7 +270,10 @@ func (cm commonLogic) GetTokenBalance(address string) (result decimal.Decimal) {
 	cm.CheckAddress(address, "")
 	accountAddress := common.HexToAddress(address)
 	contractAddress := common.HexToAddress(config.Config.TokenContractAddress)
-	tokenInstance, err := contracts.NewTokenCaller(contractAddress, cm.NewClient())
+	tokenInstance, err := contracts.NewTokenCaller(
+		contractAddress,
+		cm.NewClient(),
+	)
 	util.CheckUtil.CheckApiErr(err, "获取Token实例失败")
 	balance, err := tokenInstance.BalanceOf(&bind.CallOpts{}, accountAddress)
 	util.CheckUtil.CheckApiErr(err, "查询Token余额失败")
@@ -279,7 +298,10 @@ func (cm commonLogic) CheckTokenBalance(address string, amount float64) (result 
 func (cm commonLogic) GetNonce(fromAddress string) (nonce uint64) {
 	cm.CheckAddress(fromAddress, "")
 	address := common.HexToAddress(fromAddress)
-	nonce, err := cm.NewClient().PendingNonceAt(context.Background(), address)
+	nonce, err := cm.NewClient().PendingNonceAt(
+		context.Background(),
+		address,
+	)
 	util.CheckUtil.CheckApiErr(err, "获取nonce失败")
 	return
 }
@@ -312,14 +334,21 @@ func (cm commonLogic) GetNewTransaction(from string, to string, number float64, 
 // GetSign 交易签名
 func (cm commonLogic) GetSign(tx *types.Transaction, privKey string) (signedTx *types.Transaction) {
 	result := cm.GetTruePrivateKey(privKey)
-	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(cm.GetChainID()), result)
+	signedTx, err := types.SignTx(
+		tx,
+		types.NewEIP155Signer(cm.GetChainID()),
+		result,
+	)
 	util.CheckUtil.CheckApiErr(err, "签名失败")
 	return
 }
 
 // Send 广播数据到链上
 func (cm commonLogic) Send(signedTx *types.Transaction) (err error) {
-	err = cm.NewClient().SendTransaction(context.Background(), signedTx)
+	err = cm.NewClient().SendTransaction(
+		context.Background(),
+		signedTx,
+	)
 	util.CheckUtil.CheckApiErr(err, "广播数据失败")
 	return
 }

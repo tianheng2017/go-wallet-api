@@ -17,12 +17,15 @@ func init() {
 	group.AddGET("/create", create)
 	group.AddPOST("/privateKeyUnlock", privateKeyUnlock)
 	group.AddPOST("/mnemonicUnlock", mnemonicUnlock)
+
 	group.AddPOST("/getBalance", getBalance)
 	group.AddPOST("/getUsdtBalance", getUsdtBalance)
 	group.AddPOST("/getTokenBalance", getTokenBalance)
+
 	group.AddPOST("/transfer", transfer)
 	group.AddPOST("/usdtTransfer", usdtTransfer)
 	group.AddPOST("/tokenTransfer", tokenTransfer)
+
 	group.AddPOST("/unlock", unlock)
 	group.AddGET("/getUnlockToken", getUnlockToken)
 	group.AddGET("/getLastUnlockTimestamp", getLastUnlockTimestamp)
