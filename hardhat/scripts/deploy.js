@@ -24,15 +24,6 @@ async function main() {
     console.log("1.1、设置NFT合约的最大供应量为70000", "\n", "\n");
     //---------------------------------NFT---------------------------------
 
-
-    //---------------------------------USDT---------------------------------
-    // 部署USDT合约
-    const BEP20USDT = await ethers.getContractFactory("BEP20USDT");
-    const usdt = await BEP20USDT.deploy();
-    console.log("2、USDT合约部署成功: ", usdt.address, "\n", "\n");
-    //---------------------------------USDT---------------------------------
-
-
     //--------------Token（请修改为BABYTOKEN合约，我这里用Token演示）--------
     // 部署Token.sol合约
     const Token = await ethers.getContractFactory("Token");
@@ -54,7 +45,8 @@ async function main() {
     // 部署人转账给TokenLock合约1000000个Token用于锁仓
     console.log("4.1、部署人转账1000000个Token给TokenLock合约，模拟待解锁总额，方便测试解锁API");
     await token.transfer(
-        tokenLock.address, ethers.utils.parseEther("1000000"),
+        tokenLock.address, 
+        ethers.utils.parseEther("1000000"),
     );
 
     // 验证TokenLock合约的余额
