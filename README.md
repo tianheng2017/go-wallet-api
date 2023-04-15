@@ -34,6 +34,7 @@ go run main.go
 ### 注意
 ```
 部署到BSC测试网：npx hardhat run scripts/deploy.js --network bsctestnet
+BSC测试网每天可以领0.1个TBNB：https://testnet.bnbchain.org/faucet-smart，领完刷新页面再领，要想领更多需要VPN切换IP+多个钱包，然后将TBNB转账汇总到一起即可
 生产环境需要go生成二进制包（不要基于源码运行）：go build，搭配supervisor使用，具体生成exe还是linux视情况自行百度
 ```
 
