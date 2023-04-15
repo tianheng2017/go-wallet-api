@@ -1,27 +1,44 @@
 const hre = require("hardhat");
 const ethers = hre.ethers;
 
-// 正式部署上链脚本demo
-// 部署方法：npx hardhat run scripts/deploy.js --network bsc_testnet
-// 要求：部署前先在hardhat.config.js中配置好accounts[0]，这是合约部署人
+// 用于测试API的本地部署脚本
 async function main() {
     const accounts = await ethers.getSigners();
 
-    console.log("\n");
+    console.log("\n", "\n");
 
     //---------------------------------NFT---------------------------------
     // 部署NFT合约，设置NFT name、symbol、拥有铸造权的地址组
     const ERC721SeaDrop = await ethers.getContractFactory("ERC721SeaDrop");
     const nft = await ERC721SeaDrop.deploy(
-        "MyNft", 
-        "MNFT", 
+        "MyNft",
+        "MNFT",
         [accounts[0].address]   //[铸造人1,铸造人2]
     );
     console.log("1、NFT合约部署成功: ", nft.address);
 
     // 设置NFT最大供应量，不设置无法铸造，切记
     await nft.setMaxSupply(70000);
-    console.log("1.1、设置NFT合约的最大供应量为70000", "\n", "\n");
+    console.log("1.1、设置NFT合约的最大供应量为70000");
+
+    // 铸造NFT 1给accounts[1] (首次tokenId默认为1，第二个参数代表数量)
+    await nft.mintSeaDrop(
+        accounts[1].address, 
+        1
+    );
+    console.log("1.2、铸造NFT 1 给accounts[1]");
+
+    // 验证NFT 1的拥有者是否为accounts[1]
+    const owner = await nft.ownerOf(1);
+    console.log("1.3、验证NFT 1的拥有者是否为accounts[1]: ", owner == accounts[1].address);
+
+    // account[1]将NFT授权给account[0]，方便测试授权转账API
+    // 非部署人调用合约要像这样
+    await new ethers.Contract(nft.address, nft.interface, accounts[1]).approve(
+        accounts[0].address, 
+        1
+    );
+    console.log("1.4、account[1]将NFT 1授权给account[0]，方便测试授权转账API", "\n", "\n");
     //---------------------------------NFT---------------------------------
 
 
@@ -33,7 +50,8 @@ async function main() {
     //---------------------------------USDT---------------------------------
 
 
-    //--------------Token（请修改为BABYTOKEN合约，我这里用Token演示）--------
+    //---------------------------------Token---------------------------------
+    // 这个BABYTOKEN合约参数较复杂，没具体研究，未部署，我用Token.sol替代了
     // 部署Token.sol合约
     const Token = await ethers.getContractFactory("Token");
     const token = await Token.deploy(
