@@ -29,7 +29,7 @@ var Config = config{
 	// NFT铸造人私钥(去掉0x)，要改
 	NftFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// NFT合约地址，要改
-	NftContractAddress: "0x1fDEdE3eBe5384776E4c2BA46a5c4b703daD83a6",
+	NftContractAddress: "0x625734686c6da615926A053CBF70579A53CB7eD8",
 
 	// -----------------------------------主网币转账配置---------------------------------
 	// 主网币发送人私钥(去掉0x)，要改
@@ -46,13 +46,13 @@ var Config = config{
 	// 代币发送人私钥(去掉0x)，要改
 	TokenFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// 代币合约地址，要改
-	TokenContractAddress: "0x1eD10a20F94F56C103305f61FA1aAaf023F51eB6",
+	TokenContractAddress: "0xc5B7e9377f12a614E709c0d79B93e80140538Df0",
 
 	// -----------------------------------TokenLock解锁配置------------------------------
 	// TokenLock合约所有人私钥(去掉0x)，要改
 	TokenLockPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// TokenLock合约地址，要改
-	TokenLockContractAddress: "0x825A62186a9386Ec3EAb3CC5C442ce51BE8Fb321",
+	TokenLockContractAddress: "0x7F877154F8b44E8f97dD5a0A798f2361C46f1E04",
 }
 
 type config struct {
