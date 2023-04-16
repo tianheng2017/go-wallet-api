@@ -27,6 +27,8 @@ yarn
 ### GoApi
 ```
 cd api
+# 下载依赖
+go mod tidy
 修改api/config/config.go中的各合约地址为上一步控制台中输出的地址
 go run main.go
 ```
