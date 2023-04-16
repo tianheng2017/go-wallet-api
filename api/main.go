@@ -34,6 +34,7 @@ func initRouter() *gin.Engine {
 // initServer 初始化server
 func initServer(router *gin.Engine) *http.Server {
 	return &http.Server{
+		// 只接受本地请求
 		Addr:           ":" + strconv.Itoa(config.Config.ServerPort),
 		Handler:        router,
 		ReadTimeout:    10 * time.Second,

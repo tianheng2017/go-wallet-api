@@ -42,17 +42,9 @@ func (ws walletService) GetBalance(address string) resp.WalletBalanceResp {
 	}
 }
 
-// GetUsdtBalance 查询USDT余额
-func (ws walletService) GetUsdtBalance(address string) resp.WalletBalanceResp {
-	balance := logic.CommonLogic.GetUsdtBalance(address)
-	return resp.WalletBalanceResp{
-		Balance: balance,
-	}
-}
-
-// GetTokenBalance 查询Token余额
-func (ws walletService) GetTokenBalance(address string) resp.WalletBalanceResp {
-	balance := logic.CommonLogic.GetTokenBalance(address)
+// GetErc20Balance 查询代币余额
+func (ws walletService) GetErc20Balance(name string, address string) resp.WalletBalanceResp {
+	balance := logic.CommonLogic.GetErc20Balance(name, address)
 	return resp.WalletBalanceResp{
 		Balance: balance,
 	}
@@ -66,17 +58,9 @@ func (ws walletService) Transfer(to string, amount float64) resp.WalletTxResp {
 	}
 }
 
-// UsdtTransfer USDT转账
-func (ws walletService) UsdtTransfer(to string, amount float64) resp.WalletTxResp {
-	tx := logic.WalletLogic.UsdtTransfer(to, amount)
-	return resp.WalletTxResp{
-		Tx: tx,
-	}
-}
-
-// TokenTransfer Token转账
-func (ws walletService) TokenTransfer(to string, amount float64) resp.WalletTxResp {
-	tx := logic.WalletLogic.TokenTransfer(to, amount)
+// Erc20Transfer 代币转账
+func (ws walletService) Erc20Transfer(name string, to string, amount float64) resp.WalletTxResp {
+	tx := logic.WalletLogic.Erc20Transfer(name, to, amount)
 	return resp.WalletTxResp{
 		Tx: tx,
 	}

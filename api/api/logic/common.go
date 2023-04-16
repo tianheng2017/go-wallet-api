@@ -46,6 +46,15 @@ func (cm commonLogic) NewClient() *ethclient.Client {
 	return client
 }
 
+// GetErc20Info 获取ERC20配置信息
+func (cm commonLogic) GetErc20Info(name string) (info config.Info) {
+	info, ok := config.Config.Erc20[name]
+	if !ok {
+		util.CheckUtil.CheckApiErr(errors.New(name), "代币名称不存在")
+	}
+	return
+}
+
 // GetNftInstance 获取NFT实例
 func (cm commonLogic) GetNftInstance() (nftInstance *contracts.Nft) {
 	nftInstance, err := contracts.NewNft(
@@ -56,23 +65,14 @@ func (cm commonLogic) GetNftInstance() (nftInstance *contracts.Nft) {
 	return
 }
 
-// GetUsdtInstance 获取Usdt实例
-func (cm commonLogic) GetUsdtInstance() (usdtInstance *contracts.Usdt) {
-	usdtInstance, err := contracts.NewUsdt(
-		common.HexToAddress(config.Config.UsdtContractAddress),
+// GetErc20Instance 获取ERC20代币实例
+func (cm commonLogic) GetErc20Instance(name string) (tokenInstance *contracts.Erc20) {
+	info := cm.GetErc20Info(name)
+	tokenInstance, err := contracts.NewErc20(
+		common.HexToAddress(info.Contract),
 		CommonLogic.NewClient(),
 	)
-	util.CheckUtil.CheckApiErr(err, "获取Usdt实例失败")
-	return
-}
-
-// GetTokenInstance 获取Token实例
-func (cm commonLogic) GetTokenInstance() (tokenInstance *contracts.Token) {
-	tokenInstance, err := contracts.NewToken(
-		common.HexToAddress(config.Config.TokenContractAddress),
-		CommonLogic.NewClient(),
-	)
-	util.CheckUtil.CheckApiErr(err, "获取Token实例失败")
+	util.CheckUtil.CheckApiErr(err, "获取代币实例失败")
 	return
 }
 
@@ -213,7 +213,7 @@ func (cm commonLogic) ToCommonAddress(address string) (commonAddress string) {
 	return
 }
 
-// GetBalance 获取钱包余额
+// GetBalance 获取主网币余额
 func (cm commonLogic) GetBalance(address string) (result decimal.Decimal) {
 	cm.CheckAddress(address, "")
 	balance, err := cm.NewClient().BalanceAt(
@@ -221,74 +221,46 @@ func (cm commonLogic) GetBalance(address string) (result decimal.Decimal) {
 		common.HexToAddress(address),
 		nil,
 	)
-	util.CheckUtil.CheckApiErr(err, "查询余额失败")
+	util.CheckUtil.CheckApiErr(err, "查询主网币余额失败")
 	result = cm.ToDecimal(balance, 18)
 	return
 }
 
-// CheckBalance 校验钱包余额
+// CheckBalance 校验主网币余额
 func (cm commonLogic) CheckBalance(address string, amount float64) (result bool) {
 	result = true
 	balance := cm.GetBalance(address)
 	value, _ := strconv.ParseFloat(balance.String(), 64)
 	if value < amount {
 		result = false
-		tip := "钱包余额不足, 当前余额: " + fmt.Sprintf("%f", value)
+		tip := "主网币余额不足, 当前余额: " + fmt.Sprintf("%f", value)
 		util.CheckUtil.CheckApiErr(errors.New(""), tip)
 	}
 	return
 }
 
-// GetUsdtBalance 获取USDT余额
-func (cm commonLogic) GetUsdtBalance(address string) (result decimal.Decimal) {
+// GetERC20Balance 获取ERC20代币余额
+func (cm commonLogic) GetErc20Balance(name string, address string) (result decimal.Decimal) {
 	cm.CheckAddress(address, "")
+	info := cm.GetErc20Info(name)
 	accountAddress := common.HexToAddress(address)
-	contractAddress := common.HexToAddress(config.Config.UsdtContractAddress)
-	usdtInstance, err := contracts.NewUsdtCaller(contractAddress, cm.NewClient())
-	util.CheckUtil.CheckApiErr(err, "获取USDT实例失败")
+	contractAddress := common.HexToAddress(info.Contract)
+	usdtInstance, err := contracts.NewErc20Caller(contractAddress, cm.NewClient())
+	util.CheckUtil.CheckApiErr(err, "获取实例失败")
 	balance, err := usdtInstance.BalanceOf(&bind.CallOpts{}, accountAddress)
-	util.CheckUtil.CheckApiErr(err, "查询USDT余额失败")
+	util.CheckUtil.CheckApiErr(err, "查询余额失败")
 	result = cm.ToDecimal(balance, 18)
 	return
 }
 
-// CheckUsdtBalance 校验钱包USDT余额
-func (cm commonLogic) CheckUsdtBalance(address string, amount float64) (result bool) {
+// CheckErc20Balance 校验钱包Erc20余额
+func (cm commonLogic) CheckErc20Balance(name string, address string, amount float64) (result bool) {
 	result = true
-	balance := cm.GetUsdtBalance(address)
+	balance := cm.GetErc20Balance(name, address)
 	value, _ := strconv.ParseFloat(balance.String(), 64)
 	if value < amount {
 		result = false
-		tip := "钱包USDT余额不足, 当前余额: " + fmt.Sprintf("%f", value)
-		util.CheckUtil.CheckApiErr(errors.New(""), tip)
-	}
-	return
-}
-
-// GetTokenBalance 获取Token余额
-func (cm commonLogic) GetTokenBalance(address string) (result decimal.Decimal) {
-	cm.CheckAddress(address, "")
-	accountAddress := common.HexToAddress(address)
-	contractAddress := common.HexToAddress(config.Config.TokenContractAddress)
-	tokenInstance, err := contracts.NewTokenCaller(
-		contractAddress,
-		cm.NewClient(),
-	)
-	util.CheckUtil.CheckApiErr(err, "获取Token实例失败")
-	balance, err := tokenInstance.BalanceOf(&bind.CallOpts{}, accountAddress)
-	util.CheckUtil.CheckApiErr(err, "查询Token余额失败")
-	result = cm.ToDecimal(balance, 18)
-	return
-}
-
-// CheckTokenBalance 校验钱包Token余额
-func (cm commonLogic) CheckTokenBalance(address string, amount float64) (result bool) {
-	result = true
-	balance := cm.GetTokenBalance(address)
-	value, _ := strconv.ParseFloat(balance.String(), 64)
-	if value < amount {
-		result = false
-		tip := "钱包代币余额不足, 当前余额: " + fmt.Sprintf("%f", value)
+		tip := "代币余额不足, 当前余额: " + fmt.Sprintf("%f", value)
 		util.CheckUtil.CheckApiErr(errors.New(""), tip)
 	}
 	return

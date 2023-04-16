@@ -3,7 +3,7 @@ const ethers = hre.ethers;
 
 // 正式部署上链脚本demo
 // 部署方法：npx hardhat run scripts/deploy.js --network bsc_testnet
-// 要求：部署前先在hardhat.config.js中配置好accounts[0]，这是合约部署人
+// 要求：部署前先在hardhat.config.js中配置好defaultAccount，这是合约部署人
 async function main() {
     const accounts = await ethers.getSigners();
 
@@ -24,26 +24,15 @@ async function main() {
     console.log("1.1、设置NFT合约的最大供应量为70000", "\n", "\n");
     //---------------------------------NFT---------------------------------
 
-    //--------------Token（请修改为BABYTOKEN合约，我这里用Token演示）--------
-    // 部署Token.sol合约
-    const Token = await ethers.getContractFactory("Token");
-    const token = await Token.deploy(
-        "AAA",
-        "AAA",
-    );
-    console.log("3、Token合约部署成功: ", token.address, "\n", "\n");
-    //---------------------------------Token---------------------------------
-
-
     //---------------------------------TokenLock---------------------------------
-    // 部署TokenLock合约
+    // 部署TokenLock合约，需要填入你的线上正式baytoken地址
     const TokenLock = await ethers.getContractFactory("TokenLock");
-    // 传入Token合约地址
-    const tokenLock = await TokenLock.deploy(token.address);
-    console.log("4、TokenLock合约部署成功: ", tokenLock.address);
+    // 传入Token合约地址，正式使用请传具体token合约地址
+    const tokenLock = await TokenLock.deploy("你的线上正式baytoken地址");
+    console.log("2、TokenLock合约部署成功: ", tokenLock.address);
 
-    // 部署人转账给TokenLock合约1000000个Token用于锁仓
-    console.log("4.1、部署人转账1000000个Token给TokenLock合约，模拟待解锁总额，方便测试解锁API");
+    // 部署人转账给TokenLock合约1000000个（假设是这么多，具体自己改）Token用于锁仓
+    console.log("2.1、部署人转账1000000个Token给TokenLock合约，表示待解锁总额");
     await token.transfer(
         tokenLock.address, 
         ethers.utils.parseEther("1000000"),
@@ -51,7 +40,7 @@ async function main() {
 
     // 验证TokenLock合约的余额
     const tokenLockBalance = await token.balanceOf(tokenLock.address);
-    console.log("4.2、验证TokenLock合约的余额: ", ethers.utils.formatEther(tokenLockBalance), "\n", "\n");
+    console.log("2.2、验证TokenLock合约的余额: ", ethers.utils.formatEther(tokenLockBalance), "\n", "\n");
     //---------------------------------TokenLock---------------------------------
 }
 

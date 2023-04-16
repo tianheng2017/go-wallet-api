@@ -20,8 +20,21 @@ type WalletGetBalanceReq struct {
 	Address string `form:"address" binding:"required"` // 钱包地址
 }
 
+// WalletGetErc20BalanceReq 获取代币余额参数
+type WalletGetErc20BalanceReq struct {
+	Name    string `form:"name" binding:"required"`    // 代币名称
+	Address string `form:"address" binding:"required"` // 钱包地址
+}
+
 // WalletTransferReq 转账参数
 type WalletTransferReq struct {
 	To     string  `form:"to" binding:"required"` // 收款方钱包地址
 	Amount float64 `form:"amount" binding:"gt=0"` // 转账金额
+}
+
+// WalletErc20TransferReq 代币转账参数
+type WalletErc20TransferReq struct {
+	Name   string  `form:"name" binding:"required"` // 代币名称
+	To     string  `form:"to" binding:"required"`   // 收款方钱包地址
+	Amount float64 `form:"amount" binding:"gt=0"`   // 转账金额
 }

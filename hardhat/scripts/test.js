@@ -50,16 +50,25 @@ async function main() {
     //---------------------------------USDT---------------------------------
 
 
-    //---------------------------------Token---------------------------------
-    // 这个BABYTOKEN合约参数较复杂，没具体研究，未部署，我用Token.sol替代了
-    // 部署Token.sol合约
+    //---------------------------------测试Token1---------------------------
+    // 部署Token合约
     const Token = await ethers.getContractFactory("Token");
     const token = await Token.deploy(
         "AAA",
         "AAA",
     );
     console.log("3、Token合约部署成功: ", token.address, "\n", "\n");
-    //---------------------------------Token---------------------------------
+    //---------------------------------测试Token1---------------------------------
+
+    //---------------------------------测试Token2---------------------------
+    // 部署Token2合约，合约与Token1不同，证明API接口可以ERC20标准代币通用
+    const Token2 = await ethers.getContractFactory("Token2");
+    const token2 = await Token2.deploy(
+        "BBB",
+        "BBB",
+    );
+    console.log("4、Token2合约部署成功: ", token2.address, "\n", "\n");
+    //---------------------------------测试Token2---------------------------------
 
 
     //---------------------------------TokenLock---------------------------------
@@ -67,17 +76,17 @@ async function main() {
     const TokenLock = await ethers.getContractFactory("TokenLock");
     // 传入Token合约地址
     const tokenLock = await TokenLock.deploy(token.address);
-    console.log("4、TokenLock合约部署成功: ", tokenLock.address);
+    console.log("5、TokenLock合约部署成功: ", tokenLock.address);
 
     // 部署人转账给TokenLock合约1000000个Token用于锁仓
-    console.log("4.1、部署人转账1000000个Token给TokenLock合约，模拟待解锁总额，方便测试解锁API");
+    console.log("5.1、部署人转账1000000个Token给TokenLock合约，模拟待解锁总额，方便测试解锁API");
     await token.transfer(
         tokenLock.address, ethers.utils.parseEther("1000000"),
     );
 
     // 验证TokenLock合约的余额
     const tokenLockBalance = await token.balanceOf(tokenLock.address);
-    console.log("4.2、验证TokenLock合约的余额: ", ethers.utils.formatEther(tokenLockBalance), "\n", "\n");
+    console.log("5.2、验证TokenLock合约的余额: ", ethers.utils.formatEther(tokenLockBalance), "\n", "\n");
     //---------------------------------TokenLock---------------------------------
 }
 

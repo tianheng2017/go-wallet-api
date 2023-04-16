@@ -15,7 +15,7 @@ var Config = config{
 	// -----------------------------------节点配置-----------------------------------
 	// 当前启用的节点，4选1，要改
 	CurrentNodeUrl: 0,
-	// 以下都可以从metamask网络里面复制，我这里从TokenPocket里面复制的
+	// 以下都可以从metamask网络里面或TokenPocket里面复制
 	// 0 - 本地测试节点
 	LocalNodeUrl: "http://127.0.0.1:8545",
 	// 1 - 以太坊节点
@@ -29,24 +29,28 @@ var Config = config{
 	// NFT铸造人私钥(去掉0x)，要改
 	NftFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// NFT合约地址，要改
-	NftContractAddress: "0x625734686c6da615926A053CBF70579A53CB7eD8",
+	NftContractAddress: "0x2bC3Ed169511Cc923338754DA100547fEdF838Cd",
 
 	// -----------------------------------主网币转账配置---------------------------------
 	// 主网币发送人私钥(去掉0x)，要改
 	PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 
-	// -----------------------------------USDT相关配置-----------------------------------
-	// USDT发送人私钥(去掉0x)，要改
-	UsdtFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
-	// USDT合约地址，要改
-	UsdtContractAddress: "0xF40B98bab30Da9C583Bf4762dA927c51afEE2c9b",
-
-	// -----------------------------------代币相关配置-----------------------------------
-	// 这不是一个任意的代币，是babytoken，与contracts/token.abi对应
-	// 代币发送人私钥(去掉0x)，要改
-	TokenFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
-	// 代币合约地址，要改
-	TokenContractAddress: "0xc5B7e9377f12a614E709c0d79B93e80140538Df0",
+	// -----------------------------------ERC20代币配置---------------------------------
+	// 填写代币名称、合约地址、私钥信息
+	Erc20: map[string]Info{
+		"AAA": {
+			Contract:   "0xB577B45CAC1229a846B6250C8dBD964C8998be59",
+			PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+		},
+		"BBB": {
+			Contract:   "0x33578316FE7e9B48A0Ff0B4db811878B811F1843",
+			PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+		},
+		"USDT": {
+			Contract:   "0x7c2E3f2C2F2fC8CDbd1E72212F79d0Ed13C9d2B7",
+			PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+		},
+	},
 
 	// -----------------------------------TokenLock解锁配置------------------------------
 	// TokenLock合约所有人私钥(去掉0x)，要改
@@ -71,12 +75,13 @@ type config struct {
 
 	PrivateKey string
 
-	UsdtFromPrivateKey  string
-	UsdtContractAddress string
-
-	TokenFromPrivateKey  string
-	TokenContractAddress string
+	Erc20 map[string]Info
 
 	TokenLockPrivateKey      string
 	TokenLockContractAddress string
+}
+
+type Info struct {
+	Contract   string
+	PrivateKey string
 }

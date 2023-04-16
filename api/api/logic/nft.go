@@ -25,7 +25,7 @@ func (nl nftLogic) MintSeaDrop(minter string, quantity uint) (txHash string) {
 	// 校验验证接收人钱包格式
 	CommonLogic.CheckAddress(minter, "接收人")
 	// 创建签名选项
-	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, fromAddress)
+	auth := CommonLogic.GetAuth(config.Config.NftFromPrivateKey, fromAddress)
 	// 生成未签名事务
 	tx, err := nftInstance.MintSeaDrop(
 		auth,
@@ -68,7 +68,7 @@ func (nl nftLogic) TransferFrom(from string, tokenId uint) (txHash string) {
 		util.CheckUtil.CheckApiErr(errors.New(""), "NFT未授权给铸造人")
 	}
 	// 创建签名选项
-	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, toAddress)
+	auth := CommonLogic.GetAuth(config.Config.NftFromPrivateKey, toAddress)
 	// 生成未签名事务
 	tx, err := nftInstance.TransferFrom(
 		auth,

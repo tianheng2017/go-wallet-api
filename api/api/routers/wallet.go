@@ -19,12 +19,10 @@ func init() {
 	group.AddPOST("/mnemonicUnlock", mnemonicUnlock)
 
 	group.AddPOST("/getBalance", getBalance)
-	group.AddPOST("/getUsdtBalance", getUsdtBalance)
-	group.AddPOST("/getTokenBalance", getTokenBalance)
+	group.AddPOST("/getErc20Balance", getErc20Balance)
 
 	group.AddPOST("/transfer", transfer)
-	group.AddPOST("/usdtTransfer", usdtTransfer)
-	group.AddPOST("/tokenTransfer", tokenTransfer)
+	group.AddPOST("/erc20Transfer", erc20Transfer)
 
 	group.AddPOST("/unlock", unlock)
 	group.AddGET("/getUnlockToken", getUnlockToken)
@@ -60,18 +58,11 @@ func getBalance(c *gin.Context) {
 	response.OkWithData(c, wallet.WalletService.GetBalance(getBalanceReq.Address))
 }
 
-// 查询Usdt余额
-func getUsdtBalance(c *gin.Context) {
-	var getUsdtBalanceReq req.WalletGetBalanceReq
-	util.VerifyUtil.VerifyBody(c, &getUsdtBalanceReq)
-	response.OkWithData(c, wallet.WalletService.GetUsdtBalance(getUsdtBalanceReq.Address))
-}
-
-// 查询Token余额
-func getTokenBalance(c *gin.Context) {
-	var getTokenBalanceReq req.WalletGetBalanceReq
-	util.VerifyUtil.VerifyBody(c, &getTokenBalanceReq)
-	response.OkWithData(c, wallet.WalletService.GetTokenBalance(getTokenBalanceReq.Address))
+// 查询代币余额
+func getErc20Balance(c *gin.Context) {
+	var getErc20BalanceReq req.WalletGetErc20BalanceReq
+	util.VerifyUtil.VerifyBody(c, &getErc20BalanceReq)
+	response.OkWithData(c, wallet.WalletService.GetErc20Balance(getErc20BalanceReq.Name, getErc20BalanceReq.Address))
 }
 
 // 主网币转账(ETH/BNB等)
@@ -81,18 +72,11 @@ func transfer(c *gin.Context) {
 	response.OkWithData(c, wallet.WalletService.Transfer(transferReq.To, transferReq.Amount))
 }
 
-// Usdt转账
-func usdtTransfer(c *gin.Context) {
-	var usdtTransferReq req.WalletTransferReq
-	util.VerifyUtil.VerifyBody(c, &usdtTransferReq)
-	response.OkWithData(c, wallet.WalletService.UsdtTransfer(usdtTransferReq.To, usdtTransferReq.Amount))
-}
-
-// Token转账
-func tokenTransfer(c *gin.Context) {
-	var tokenTransferReq req.WalletTransferReq
-	util.VerifyUtil.VerifyBody(c, &tokenTransferReq)
-	response.OkWithData(c, wallet.WalletService.TokenTransfer(tokenTransferReq.To, tokenTransferReq.Amount))
+// 代币转账
+func erc20Transfer(c *gin.Context) {
+	var erc20TransferReq req.WalletErc20TransferReq
+	util.VerifyUtil.VerifyBody(c, &erc20TransferReq)
+	response.OkWithData(c, wallet.WalletService.Erc20Transfer(erc20TransferReq.Name, erc20TransferReq.To, erc20TransferReq.Amount))
 }
 
 // TokenLock合约代币解锁

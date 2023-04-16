@@ -20,8 +20,6 @@ import (
 
 var (
 	WalletLogic       = walletLogic{}
-	usdtInstance      = CommonLogic.GetUsdtInstance()
-	tokenInstance     = CommonLogic.GetTokenInstance()
 	tokenLockInstance = CommonLogic.GetTokenLockInstance()
 )
 
@@ -113,40 +111,22 @@ func (wl walletLogic) Transfer(to string, amount float64) (txHash string) {
 	return
 }
 
-// UsdtTransfer USDT转账
-func (wl walletLogic) UsdtTransfer(to string, amount float64) (txHash string) {
+// Erc20Transfer 代币转账
+func (wl walletLogic) Erc20Transfer(name string, to string, amount float64) (txHash string) {
+	// 获取代币信息
+	info := CommonLogic.GetErc20Info(name)
+	// 获取代币实例
+	erc20Instance := CommonLogic.GetErc20Instance(name)
 	// 发款方私钥解锁，获取钱包地址
-	fromAddress := wl.PrivateKeyUnlock(config.Config.UsdtFromPrivateKey)
+	fromAddress := wl.PrivateKeyUnlock(info.PrivateKey)
 	// 校验发送人余额
-	CommonLogic.CheckUsdtBalance(fromAddress, amount)
+	CommonLogic.CheckErc20Balance(name, fromAddress, amount)
 	// 校验收款方钱包格式
 	CommonLogic.CheckAddress(to, "收款方")
 	// 创建签名选项
-	auth := CommonLogic.GetAuth(config.Config.UsdtFromPrivateKey, fromAddress)
+	auth := CommonLogic.GetAuth(info.PrivateKey, fromAddress)
 	// 生成未签名事务
-	tx, err := usdtInstance.Transfer(
-		auth,
-		common.HexToAddress(to),
-		CommonLogic.ToWei(amount, 18),
-	)
-	util.CheckUtil.CheckApiErr(err, "转账失败")
-	// 返回txHash
-	txHash = tx.Hash().Hex()
-	return
-}
-
-// TokenTransfer Token转账
-func (wl walletLogic) TokenTransfer(to string, amount float64) (txHash string) {
-	// 发款方私钥解锁，获取钱包地址
-	fromAddress := wl.PrivateKeyUnlock(config.Config.TokenFromPrivateKey)
-	// 校验发送人余额
-	CommonLogic.CheckTokenBalance(fromAddress, amount)
-	// 校验收款方钱包格式
-	CommonLogic.CheckAddress(to, "收款方")
-	// 创建签名选项
-	auth := CommonLogic.GetAuth(config.Config.TokenFromPrivateKey, fromAddress)
-	// 生成未签名事务
-	tx, err := tokenInstance.Transfer(
+	tx, err := erc20Instance.Transfer(
 		auth,
 		common.HexToAddress(to),
 		CommonLogic.ToWei(amount, 18),
