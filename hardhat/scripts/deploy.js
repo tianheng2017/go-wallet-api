@@ -28,7 +28,7 @@ async function main() {
     // 部署TokenLock合约，需要填入你的线上正式baytoken地址
     const TokenLock = await ethers.getContractFactory("TokenLock");
     // 传入Token合约地址，正式使用请传具体token合约地址
-    const tokenLock = await TokenLock.deploy("你的线上正式baytoken地址");
+    const tokenLock = await TokenLock.deploy("0x55d398326f99059fF775485246999027B3197955");
     console.log("2、TokenLock合约部署成功: ", tokenLock.address);
 
     // 部署人转账给TokenLock合约1000000个（假设是这么多，具体自己改）Token用于锁仓
@@ -41,7 +41,7 @@ async function main() {
     // 验证TokenLock合约的余额
     const tokenLockBalance = await token.balanceOf(tokenLock.address);
     console.log("2.2、验证TokenLock合约的余额: ", ethers.utils.formatEther(tokenLockBalance), "\n", "\n");
-    //---------------------------------TokenLock---------------------------------
+    // ---------------------------------TokenLock---------------------------------
 }
 
 main()
