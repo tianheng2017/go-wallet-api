@@ -24,10 +24,11 @@ func init() {
 	group.AddPOST("/transfer", transfer)
 	group.AddPOST("/erc20Transfer", erc20Transfer)
 
-	group.AddPOST("/unlock", unlock)
+	group.AddGET("/unlock", unlock)
 	group.AddGET("/getUnlockToken", getUnlockToken)
 	group.AddGET("/getLastUnlockTimestamp", getLastUnlockTimestamp)
 	group.AddGET("/getStartTimestamp", getStartTimestamp)
+	group.AddPOST("/tokenLockTransfer", tokenLockTransfer)
 }
 
 // 生成钱包
@@ -97,4 +98,11 @@ func getLastUnlockTimestamp(c *gin.Context) {
 // 获取TokenLock合约启动时间
 func getStartTimestamp(c *gin.Context) {
 	response.OkWithData(c, wallet.WalletService.GetStartTimestamp())
+}
+
+// 已解锁代币转账
+func tokenLockTransfer(c *gin.Context) {
+	var tokenLockTransferReq req.WalletTransferReq
+	util.VerifyUtil.VerifyBody(c, &tokenLockTransferReq)
+	response.OkWithData(c, wallet.WalletService.TokenLockTransfer(tokenLockTransferReq.To, tokenLockTransferReq.Amount))
 }

@@ -222,6 +222,7 @@ func (cm commonLogic) GetBalance(address string) (result decimal.Decimal) {
 		nil,
 	)
 	util.CheckUtil.CheckApiErr(err, "查询主网币余额失败")
+	// 主网币精度为18
 	result = cm.ToDecimal(balance, 18)
 	return
 }
@@ -249,7 +250,7 @@ func (cm commonLogic) GetErc20Balance(name string, address string) (result decim
 	util.CheckUtil.CheckApiErr(err, "获取实例失败")
 	balance, err := usdtInstance.BalanceOf(&bind.CallOpts{}, accountAddress)
 	util.CheckUtil.CheckApiErr(err, "查询余额失败")
-	result = cm.ToDecimal(balance, 18)
+	result = cm.ToDecimal(balance, int(info.Decimal))
 	return
 }
 
@@ -296,6 +297,7 @@ func (cm commonLogic) GetChainID() (chainID *big.Int) {
 func (cm commonLogic) GetNewTransaction(from string, to string, number float64, input []byte) (tx *types.Transaction) {
 	nonce := cm.GetNonce(from)
 	toAddress := common.HexToAddress(to)
+	// 主网币精度为18
 	value := cm.ToWei(number, 18)
 	gasLimit := uint64(600000)
 	gasPrice := cm.GetGasPrice()

@@ -97,3 +97,11 @@ func (ws walletService) GetStartTimestamp() resp.WalletTimestampResp {
 		Timestamp: startTimestamp,
 	}
 }
+
+// TokenLockTransfer 已解锁代币转账
+func (ws walletService) TokenLockTransfer(to string, amount float64) resp.WalletTxResp {
+	tx := logic.WalletLogic.TokenLockTransfer(to, amount)
+	return resp.WalletTxResp{
+		Tx: tx,
+	}
+}

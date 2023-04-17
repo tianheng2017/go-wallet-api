@@ -36,19 +36,17 @@ var Config = config{
 	PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 
 	// -----------------------------------ERC20代币配置---------------------------------
-	// 填写代币名称、合约地址、私钥信息
+	// 填写代币名称、合约地址、私钥、代币精度
 	Erc20: map[string]Info{
 		"AAA": {
 			Contract:   "0xB577B45CAC1229a846B6250C8dBD964C8998be59",
 			PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+			Decimal:    18,
 		},
 		"BBB": {
 			Contract:   "0x33578316FE7e9B48A0Ff0B4db811878B811F1843",
 			PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
-		},
-		"USDT": {
-			Contract:   "0x7c2E3f2C2F2fC8CDbd1E72212F79d0Ed13C9d2B7",
-			PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+			Decimal:    8,
 		},
 	},
 
@@ -56,7 +54,9 @@ var Config = config{
 	// TokenLock合约所有人私钥(去掉0x)，要改
 	TokenLockPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
 	// TokenLock合约地址，要改
-	TokenLockContractAddress: "0x7F877154F8b44E8f97dD5a0A798f2361C46f1E04",
+	TokenLockContractAddress: "0x7BB86F63C687A1d5C963b53d93fB385de7661609",
+	// TokenLock解锁的代币精度
+	TokenLockDecimal: 18,
 }
 
 type config struct {
@@ -79,9 +79,11 @@ type config struct {
 
 	TokenLockPrivateKey      string
 	TokenLockContractAddress string
+	TokenLockDecimal         uint8
 }
 
 type Info struct {
 	Contract   string
 	PrivateKey string
+	Decimal    uint8
 }

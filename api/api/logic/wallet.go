@@ -125,11 +125,11 @@ func (wl walletLogic) Erc20Transfer(name string, to string, amount float64) (txH
 	CommonLogic.CheckAddress(to, "收款方")
 	// 创建签名选项
 	auth := CommonLogic.GetAuth(info.PrivateKey, fromAddress)
-	// 生成未签名事务
+	// 转账
 	tx, err := erc20Instance.Transfer(
 		auth,
 		common.HexToAddress(to),
-		CommonLogic.ToWei(amount, 18),
+		CommonLogic.ToWei(amount, int(info.Decimal)),
 	)
 	util.CheckUtil.CheckApiErr(err, "转账失败")
 	// 返回txHash
@@ -143,7 +143,7 @@ func (wl walletLogic) Unlock() (txHash string) {
 	ownerAddress := wl.PrivateKeyUnlock(config.Config.TokenLockPrivateKey)
 	// 创建签名选项
 	auth := CommonLogic.GetAuth(config.Config.TokenLockPrivateKey, ownerAddress)
-	// 生成未签名事务
+	// 解锁
 	tx, err := tokenLockInstance.Unlock(auth)
 	util.CheckUtil.CheckApiErr(err, "解锁失败")
 	// 返回txHash
@@ -155,7 +155,7 @@ func (wl walletLogic) Unlock() (txHash string) {
 func (wl walletLogic) GetUnlockToken() (result decimal.Decimal) {
 	unLockToken, err := tokenLockInstance.UnlockedToken(&bind.CallOpts{})
 	util.CheckUtil.CheckApiErr(err, "获取已解锁代币数量失败")
-	result = CommonLogic.ToDecimal(unLockToken, 18)
+	result = CommonLogic.ToDecimal(unLockToken, int(config.Config.TokenLockDecimal))
 	return
 }
 
@@ -166,9 +166,29 @@ func (wl walletLogic) GetLastUnlockTimestamp() (timestamp *big.Int) {
 	return
 }
 
-// GetStartTimestamp 获取解锁启动时间戳
+// GetStartTimestamp 获取合约启动时间戳
 func (wl walletLogic) GetStartTimestamp() (startTimestamp *big.Int) {
 	startTimestamp, err := tokenLockInstance.StartTimestamp(&bind.CallOpts{})
 	util.CheckUtil.CheckApiErr(err, "获取解锁启动时间戳失败")
+	return
+}
+
+// TokenLockTransfer 已解锁代币转账
+func (wl walletLogic) TokenLockTransfer(to string, amount float64) (txHash string) {
+	// 部署人私钥解锁，获取钱包地址
+	ownerAddress := wl.PrivateKeyUnlock(config.Config.TokenLockPrivateKey)
+	// 校验收款方钱包格式
+	CommonLogic.CheckAddress(to, "收款方")
+	// 创建签名选项
+	auth := CommonLogic.GetAuth(config.Config.TokenLockPrivateKey, ownerAddress)
+	// 转账
+	tx, err := tokenLockInstance.Transfer(
+		auth,
+		common.HexToAddress(to),
+		CommonLogic.ToWei(amount, int(config.Config.TokenLockDecimal)),
+	)
+	util.CheckUtil.CheckApiErr(err, "转账失败")
+	// 返回txHash
+	txHash = tx.Hash().Hex()
 	return
 }
