@@ -18,12 +18,10 @@ func (ws nftService) MintSeaDrop(minter string, quantity uint) resp.NftTxResp {
 	}
 }
 
-// TransferFrom 授权NFT转出
-func (ws nftService) TransferFrom(from string, tokenId uint) resp.NftTxResp {
-	tx := logic.NftLogic.TransferFrom(from, tokenId)
+// TransferFrom NFT转账
+func (ws nftService) TransferFrom(from string, to string, tokenId uint) resp.NftTxResp {
+	tx := logic.NftLogic.TransferFrom(from, to, tokenId)
 	return resp.NftTxResp{
 		Tx: tx,
 	}
 }
-
-// 其他

@@ -26,10 +26,10 @@ func mintSeaDrop(c *gin.Context) {
 	response.OkWithData(c, nft.NftService.MintSeaDrop(mintReq.Minter, mintReq.Quantity))
 }
 
-// 授权转出NFT
-// 参数：from: 发送人, tokenId: NFT ID
+// NFT转账
+// 参数：from: 发送人, to: 接收人, tokenId: NFT ID
 func transferFrom(c *gin.Context) {
 	var transferFromReq req.NftTransferFromReq
 	util.VerifyUtil.VerifyBody(c, &transferFromReq)
-	response.OkWithData(c, nft.NftService.TransferFrom(transferFromReq.From, transferFromReq.TokenId))
+	response.OkWithData(c, nft.NftService.TransferFrom(transferFromReq.From, transferFromReq.From, transferFromReq.TokenId))
 }

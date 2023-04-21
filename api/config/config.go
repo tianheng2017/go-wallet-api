@@ -27,32 +27,32 @@ var Config = config{
 
 	// -----------------------------------NFT相关配置----------------------------------------
 	// NFT铸造人私钥(去掉0x)，要改
-	NftFromPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+	NftFromPrivateKey: "52c74ce41f0b65e5f752217ff1f1cbb58d414563b9bc4a4dcb119deb96ae36de",
 	// NFT合约地址，要改
-	NftContractAddress: "0x2bC3Ed169511Cc923338754DA100547fEdF838Cd",
+	NftContractAddress: "0xc5fCBE746C021085dE8EcB749c74F24Cb8053C3c",
 
 	// -----------------------------------主网币转账配置---------------------------------
 	// 主网币发送人私钥(去掉0x)，要改
-	PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+	PrivateKey: "52c74ce41f0b65e5f752217ff1f1cbb58d414563b9bc4a4dcb119deb96ae36de",
 
 	// -----------------------------------ERC20代币配置---------------------------------
 	// 填写代币名称、合约地址、私钥、代币精度
 	Erc20: map[string]Info{
 		"AAA": {
 			Contract:   "0xB577B45CAC1229a846B6250C8dBD964C8998be59",
-			PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+			PrivateKey: "52c74ce41f0b65e5f752217ff1f1cbb58d414563b9bc4a4dcb119deb96ae36de",
 			Decimal:    18,
 		},
 		"BBB": {
 			Contract:   "0x33578316FE7e9B48A0Ff0B4db811878B811F1843",
-			PrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+			PrivateKey: "52c74ce41f0b65e5f752217ff1f1cbb58d414563b9bc4a4dcb119deb96ae36de",
 			Decimal:    8,
 		},
 	},
 
 	// -----------------------------------TokenLock解锁配置------------------------------
 	// TokenLock合约所有人私钥(去掉0x)，要改
-	TokenLockPrivateKey: "c9cab9af5f2ddf72c0a7ad70a313745939a00919dfc71f3b4badf71c88f5d9ed",
+	TokenLockPrivateKey: "52c74ce41f0b65e5f752217ff1f1cbb58d414563b9bc4a4dcb119deb96ae36de",
 	// TokenLock合约地址，要改
 	TokenLockContractAddress: "0x7BB86F63C687A1d5C963b53d93fB385de7661609",
 	// TokenLock解锁的代币精度

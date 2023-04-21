@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"errors"
 	"math/big"
 	"server/config"
 	"server/util"
@@ -56,27 +55,24 @@ func (nl nftLogic) GetOwnerOf(tokenId uint) (address string) {
 	return
 }
 
-// TransferFrom 授权转出NFT
-func (nl nftLogic) TransferFrom(from string, tokenId uint) (txHash string) {
+// TransferFrom NFT转账
+func (nl nftLogic) TransferFrom(from string, to string, tokenId uint) (txHash string) {
 	// 调用人私钥解锁，获取钱包
 	toAddress := WalletLogic.PrivateKeyUnlock(config.Config.NftFromPrivateKey)
-	// 校验持有人钱包格式
-	CommonLogic.CheckAddress(from, "持有人")
-	// 校验tokenId的授权地址
-	approved := nl.GetApproved(tokenId)
-	if approved != toAddress {
-		util.CheckUtil.CheckApiErr(errors.New(""), "NFT未授权给铸造人")
-	}
+	// 校验发送人
+	CommonLogic.CheckAddress(from, "发送人")
+	// 校验接收人
+	CommonLogic.CheckAddress(to, "接收人")
 	// 创建签名选项
 	auth := CommonLogic.GetAuth(config.Config.NftFromPrivateKey, toAddress)
-	// 生成未签名事务
+	// 发起转账
 	tx, err := nftInstance.TransferFrom(
 		auth,
 		common.HexToAddress(from),
-		common.HexToAddress(toAddress),
+		common.HexToAddress(to),
 		big.NewInt(int64(tokenId)),
 	)
-	util.CheckUtil.CheckApiErr(err, "NFT转出失败")
+	util.CheckUtil.CheckApiErr(err, "NFT转账失败")
 	// 返回txHash
 	txHash = tx.Hash().Hex()
 	return
