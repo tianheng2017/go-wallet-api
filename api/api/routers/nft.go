@@ -31,5 +31,5 @@ func mintSeaDrop(c *gin.Context) {
 func transferFrom(c *gin.Context) {
 	var transferFromReq req.NftTransferFromReq
 	util.VerifyUtil.VerifyBody(c, &transferFromReq)
-	response.OkWithData(c, nft.NftService.TransferFrom(transferFromReq.From, transferFromReq.From, transferFromReq.TokenId))
+	response.OkWithData(c, nft.NftService.TransferFrom(transferFromReq.From, transferFromReq.To, transferFromReq.TokenId))
 }
