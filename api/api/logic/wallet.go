@@ -14,6 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	hdwallet "github.com/miguelmota/go-ethereum-hdwallet"
+	"github.com/samber/lo"
 	"github.com/shopspring/decimal"
 	bip39 "github.com/tyler-smith/go-bip39"
 )
@@ -39,27 +40,41 @@ func (wl walletLogic) CreateWallet() (address, privateKey, mnemonic string) {
 }
 
 // BatchCreateWallet 批量生成钱包
-func (wl walletLogic) BatchCreateWallet(Count uint) (data []resp.WalletCreateResp) {
+func (wl walletLogic) BatchCreateWallet(Count uint) []resp.WalletCreateResp {
 	count := int(Count)
+	if count <= 0 {
+		return []resp.WalletCreateResp{}
+	}
+
+	data := make([]resp.WalletCreateResp, count)
+	maxWorkers := 100
+	workerCount := lo.Min([]int{maxWorkers, count})
+
 	var wg sync.WaitGroup
-	var mu sync.Mutex
-	wg.Add(count)
-	for i := 0; i < count; i++ {
-		// 协程处理
+	wg.Add(workerCount)
+	tasks := make(chan int, workerCount)
+
+	for w := 0; w < workerCount; w++ {
 		go func() {
 			defer wg.Done()
-			address, privateKey, mnemonic := wl.CreateWallet()
-			mu.Lock()
-			data = append(data, resp.WalletCreateResp{
-				Address:    address,
-				PrivateKey: privateKey,
-				Mnemonic:   mnemonic,
-			})
-			mu.Unlock()
+			for index := range tasks {
+				address, privateKey, mnemonic := wl.CreateWallet()
+				data[index] = resp.WalletCreateResp{
+					Address:    address,
+					PrivateKey: privateKey,
+					Mnemonic:   mnemonic,
+				}
+			}
 		}()
 	}
+
+	for i := 0; i < count; i++ {
+		tasks <- i
+	}
+	close(tasks)
+
 	wg.Wait()
-	return
+	return data
 }
 
 // PrivateKeyUnlock 私钥解锁钱包（得到钱包地址）
