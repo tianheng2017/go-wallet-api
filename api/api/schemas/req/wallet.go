@@ -2,7 +2,7 @@ package req
 
 //WalletCreateReq 钱包创建参数
 type WalletCreateReq struct {
-	Count uint `form:"count,default=1" binding:"min=1,max=100"` // 创建数量
+	Count uint `form:"count,default=1" binding:"min=1,max=10000"` // 创建数量
 }
 
 //WalletPrivateKeyUnlockReq 私钥解锁参数
